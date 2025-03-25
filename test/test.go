@@ -1,8 +1,7 @@
 package main
 
 import (
-	"fmt"
-	"mega/engine/logger"
+	DateUtil "mega/engine/dateutil"
 )
 
 const (
@@ -12,8 +11,11 @@ const (
 )
 
 func main() {
-	fmt.Println("abcd")
-	logger.Log("ererere")
+	DateUtil.FormatNow()
+	DateUtil.FormatTime(1742899698)
+	// fmt.Println("abcd")
+	// Logger.Log("abdfere")
+
 	// logger.Log("weorjoere")
 
 	// engine.Log("abcef emgoid")
@@ -46,8 +48,8 @@ func main() {
 	// }
 	// fmt.Println("numbers===2", numbers[0], numbers)
 
-	var book Book = Book{"title1", "name2", 9527}
-	fmt.Println("book==", book, book.book_id)
+	// var book Book = Book{"title1", "name2", 9527}
+	// fmt.Println("book==", book, book.book_id)
 
 	// m := make(map[string]int)
 	// m := map[string]int{
