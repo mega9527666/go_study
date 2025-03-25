@@ -1,7 +1,7 @@
 package main
 
 import (
-	DateUtil "mega/engine/dateutil"
+	"mega/engine/dateutil"
 )
 
 const (
@@ -11,8 +11,8 @@ const (
 )
 
 func main() {
-	DateUtil.FormatNow()
-	DateUtil.FormatTime(1742899698)
+	dateutil.FormatNow()
+	dateutil.FormatTime(1742899698)
 	// fmt.Println("abcd")
 	// Logger.Log("abdfere")
 

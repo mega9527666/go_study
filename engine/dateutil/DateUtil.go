@@ -1,24 +1,12 @@
-package DateUtil
+package dateutil
 
 import (
 	"fmt"
 	"time"
 )
 
-const (
-	LOG_LEVEL_DEBUG = iota
-	LOG_LEVEL_LOG
-	LOG_LEVEL_INFO
-	LOG_LEVEL_WARN
-	LOG_LEVEL_ERROR
-)
-
-const TAG = "MegaLog"
-
-var LOG_LEVEL = LOG_LEVEL_DEBUG
-
 func init() {
-	fmt.Println("DateUtil.init")
+	fmt.Println("dateutil.init")
 }
 
 func FormatNow() string {
