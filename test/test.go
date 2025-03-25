@@ -1,10 +1,5 @@
 package main
 
-import (
-	"mega/engine/dateutil"
-	"mega/engine/logger"
-)
-
 const (
 	None = iota
 	Male
@@ -12,14 +7,14 @@ const (
 )
 
 func main() {
-	dateutil.FormatNow()
+	// dateutil.FormatNow()
 	// dateutil.FormatTime(1742899698)
 
-	logger.Debug("dere", "eewrere")
-	logger.Log("abcewre", "wewewrw")
-	logger.Info("21323", "21232")
-	logger.Warn("we3r3e434", "24343")
-	logger.Error("we34joejre", "ejrer")
+	// logger.Debug("dere", "eewrere")
+	// logger.Log("abcewre", "wewewrw")
+	// logger.Info("21323", "21232")
+	// logger.Warn("we3r3e434", "24343")
+	// logger.Error("we34joejre", "ejrer")
 	// fmt.Println("abcd")
 	// Logger.Log("abdfere")
 
