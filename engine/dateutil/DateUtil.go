@@ -2,6 +2,7 @@ package dateutil
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -11,11 +12,8 @@ func init() {
 
 func FormatNow() string {
 	var currentTime = time.Now()
-	var formatTime = currentTime.Format("2006-01-02 15:04:05")
-	// fmt.Println("formatNow==Now", currentTime)
-	// fmt.Println("formatNow==Unix", currentTime.Unix())
-	// fmt.Println("formatNow==formatTime", formatTime)
-	return formatTime
+	var formatTime = currentTime.Format("2006-01-02 15:04:05.000")
+	return formatTime + " " + strconv.FormatInt(currentTime.Unix(), 10)
 }
 
 func FormatTime(timestamp int64) string {

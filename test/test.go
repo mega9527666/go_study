@@ -1,6 +1,7 @@
 package main
 
 import (
+	"mega/engine/dateutil"
 	"mega/engine/logger"
 )
 
@@ -11,7 +12,7 @@ const (
 )
 
 func main() {
-	// dateutil.FormatNow()
+	dateutil.FormatNow()
 	// dateutil.FormatTime(1742899698)
 
 	logger.Debug("dere", "eewrere")
