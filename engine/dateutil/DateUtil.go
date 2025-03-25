@@ -14,7 +14,7 @@ func FormatNow() string {
 	var formatTime = currentTime.Format("2006-01-02 15:04:05")
 	// fmt.Println("formatNow==Now", currentTime)
 	// fmt.Println("formatNow==Unix", currentTime.Unix())
-	fmt.Println("formatNow==formatTime", formatTime)
+	// fmt.Println("formatNow==formatTime", formatTime)
 	return formatTime
 }
 
@@ -23,6 +23,6 @@ func FormatTime(timestamp int64) string {
 	var tempTime = time.Unix(timestamp, 0)
 	var formatTime = tempTime.Format("2006-01-02 15:04:05")
 	// fmt.Println("FormatTime==tempTime", tempTime)
-	fmt.Println("FormatTime==formatTime", formatTime)
-	return ""
+	// fmt.Println("FormatTime==formatTime", formatTime)
+	return formatTime
 }
