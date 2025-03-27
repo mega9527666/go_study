@@ -1,6 +1,7 @@
 package webreqhandler
 
 import (
+	"encoding/json"
 	"mega/engine/logger"
 	"net/http"
 	"os"
@@ -49,7 +50,8 @@ func ListenAndServe(port int) {
 // 通用的分发函数（中间件）
 func dispatcher(next httpHandleFunc) httpHandleFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		go indexHandler(w, r, next)
+		// go indexHandler(w, r, next)
+		indexHandler(w, r, next)
 	}
 }
 
@@ -67,7 +69,30 @@ func megaHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Log("megaHandler=Host=", r.RequestURI, r.Host, r.RemoteAddr)
 }
 
+type Response struct {
+	Message string `json:"message"`
+}
+
 func abcdHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Log("abcdHandler==", r.RequestURI, r.Host, r.RemoteAddr)
-	logger.Log("abcdHandler=param=")
+	logger.Log("abcdHandler=param=Body", r.Body)
+	var queryMap = r.URL.Query()
+	logger.Log("abcdHandler=param=queryMap", queryMap)
+	logger.Log("abcdHandler=param=gameId", queryMap.Get("gameId"))
+	// 设置响应的 Content-Type 为 text/plain
+	// w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "text/plain")
+	// w.Header().Set("Content-Type", "application/json")
+	// 创建一个响应对象
+	response := Response{Message: "Hello, JSON abcd!"}
+	// 向客户端写入响应内容
+	// 将结构体编码为 JSON 并写入响应体
+	err := json.NewEncoder(w).Encode(response)
+	// _, err := w.Write([]byte("Hello, abcd!"))
+	if err != nil {
+		// http.Error(w, "Unable to encode JSON", http.StatusInternalServerError)
+		logger.Error("abcdHandler=error=", err)
+	}
+	// w.WriteHeader(http.StatusOK)
+	// w.Write()
 }
