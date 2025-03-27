@@ -7,11 +7,20 @@ import (
 	"strconv"
 )
 
-// 定义一个回调函数类型
-type callback func(w http.ResponseWriter, r *http.Request, method string)
+// 通用的分发函数（中间件）
+func dispatcher(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// 在执行实际的请求处理之前做一些处理
+		logger.Log("通用分发函数：请求到来，执行前处理...")
 
-func indexHandler(w http.ResponseWriter, r *http.Request, method string) {
+		// 你可以在这里加入公共的处理逻辑，例如验证、日志记录等
 
+		// 调用下一个处理函数
+		next(w, r)
+
+		// 在实际的请求处理之后做一些处理
+		logger.Log("通用分发函数：请求处理完毕，执行后处理...")
+	}
 }
 
 func megaHandler(w http.ResponseWriter, r *http.Request) {
@@ -22,9 +31,9 @@ func abcdHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Log("megaHandler=Host=", r.RequestURI, r.Host, r.RemoteAddr)
 }
 
-const methodMap = map[string]callback{
-	"mega": indexHandler,
-	"abcd": abcdHandler,
+var routesMap = map[string]http.HandleFunc{
+	"/mega": dispatcher(megaHandler),
+	"/abcd": dispatcher(abcdHandler),
 }
 
 func init() {
@@ -52,10 +61,10 @@ func ListenAndServe(port int) {
 	http.Handle("/", fs)
 
 	/*使用键输出地图值 */
-	for method := range methodMap {
-		logger.Log("methodMap=======", method, methodMap[method])
+	for route := range routesMap {
+		logger.Log("routesMap=======", route, routesMap[route])
 	}
 
-	http.HandleFunc("/mega", megaHandler)
+	// http.HandleFunc("/mega", megaHandler)
 	http.ListenAndServe(":"+portStr, nil)
 }
