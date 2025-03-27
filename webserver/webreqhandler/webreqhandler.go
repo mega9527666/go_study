@@ -80,19 +80,16 @@ func abcdHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Log("abcdHandler=param=queryMap", queryMap)
 	logger.Log("abcdHandler=param=gameId", queryMap.Get("gameId"))
 	// 设置响应的 Content-Type 为 text/plain
-	// w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Content-Type", "text/plain")
+	// w.Header().Set("Content-Type", "text/plain")
 	// w.Header().Set("Content-Type", "application/json")
 	// 创建一个响应对象
 	response := Response{Message: "Hello, JSON abcd!"}
 	// 向客户端写入响应内容
+	// w.WriteHeader(http.StatusOK)
 	// 将结构体编码为 JSON 并写入响应体
 	err := json.NewEncoder(w).Encode(response)
 	// _, err := w.Write([]byte("Hello, abcd!"))
 	if err != nil {
-		// http.Error(w, "Unable to encode JSON", http.StatusInternalServerError)
 		logger.Error("abcdHandler=error=", err)
 	}
-	// w.WriteHeader(http.StatusOK)
-	// w.Write()
 }
