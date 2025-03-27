@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"mega/engine/logger"
-	"mega/webserver/webreqhandler"
+	"mega/webreqhandler"
 	"os"
 	"strconv"
 	// "github.com/gorilla/websocket"

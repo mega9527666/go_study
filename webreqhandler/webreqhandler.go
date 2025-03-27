@@ -69,6 +69,5 @@ func megaHandler(w http.ResponseWriter, r *http.Request) {
 
 func abcdHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Log("abcdHandler==", r.RequestURI, r.Host, r.RemoteAddr)
-
-	// logger.Log("abcdHandler=param=", r.)
+	logger.Log("abcdHandler=param=")
 }
