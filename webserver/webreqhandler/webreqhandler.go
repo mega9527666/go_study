@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
+type httpHandleFunc func(w http.ResponseWriter, r *http.Request)
+
 // 通用的分发函数（中间件）
-func dispatcher(next http.HandlerFunc) http.HandlerFunc {
+func dispatcher(next httpHandleFunc) httpHandleFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 在执行实际的请求处理之前做一些处理
 		logger.Log("通用分发函数：请求到来，执行前处理...")
@@ -28,10 +30,10 @@ func megaHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func abcdHandler(w http.ResponseWriter, r *http.Request) {
-	logger.Log("megaHandler=Host=", r.RequestURI, r.Host, r.RemoteAddr)
+	logger.Log("abcdHandler=Host=", r.RequestURI, r.Host, r.RemoteAddr)
 }
 
-var routesMap = map[string]http.HandleFunc{
+var routesMap = map[string]httpHandleFunc{
 	"/mega": dispatcher(megaHandler),
 	"/abcd": dispatcher(abcdHandler),
 }
@@ -63,8 +65,7 @@ func ListenAndServe(port int) {
 	/*使用键输出地图值 */
 	for route := range routesMap {
 		logger.Log("routesMap=======", route, routesMap[route])
+		http.HandleFunc(route, routesMap[route])
 	}
-
-	// http.HandleFunc("/mega", megaHandler)
 	http.ListenAndServe(":"+portStr, nil)
 }
