@@ -19,7 +19,7 @@ var Log_Level_Names = [5]string{"debug", "log", "info", "warn", "error"}
 var LOG_LEVEL = LOG_LEVEL_DEBUG
 
 func init() {
-	fmt.Println("logger.init")
+	// fmt.Println("logger.init")
 }
 
 func getLogPreKey(nowLevel int) string {

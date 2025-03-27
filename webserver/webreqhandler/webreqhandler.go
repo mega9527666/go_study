@@ -7,17 +7,32 @@ import (
 	"strconv"
 )
 
-func init() {
-	logger.Log("webreqhandler.init")
+// 定义一个回调函数类型
+type callback func(w http.ResponseWriter, r *http.Request, method string)
+
+func indexHandler(w http.ResponseWriter, r *http.Request, method string) {
+
 }
 
 func megaHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Log("megaHandler=Host=", r.RequestURI, r.Host, r.RemoteAddr)
 }
 
-func Init(port int) {
+func abcdHandler(w http.ResponseWriter, r *http.Request) {
+	logger.Log("megaHandler=Host=", r.RequestURI, r.Host, r.RemoteAddr)
+}
+
+const methodMap = map[string]callback{
+	"mega": indexHandler,
+	"abcd": abcdHandler,
+}
+
+func init() {
+	logger.Log("webreqhandler.init")
+}
+
+func ListenAndServe(port int) {
 	var portStr string = strconv.Itoa(port)
-	logger.Log("webreqhandler.Init")
 	var dirPath string = "public/public" + portStr
 	_, err := os.Stat(dirPath)
 	if os.IsNotExist(err) {
@@ -35,7 +50,12 @@ func Init(port int) {
 	fs := http.FileServer(http.Dir(dirPath))
 	// 设置路由规则，将所有请求重定向到静态文件服务器
 	http.Handle("/", fs)
+
+	/*使用键输出地图值 */
+	for method := range methodMap {
+		logger.Log("methodMap=======", method, methodMap[method])
+	}
+
 	http.HandleFunc("/mega", megaHandler)
 	http.ListenAndServe(":"+portStr, nil)
-
 }

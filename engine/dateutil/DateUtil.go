@@ -1,13 +1,12 @@
 package dateutil
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 )
 
 func init() {
-	fmt.Println("dateutil.init")
+	// fmt.Println("dateutil.init")
 }
 
 func FormatNow() string {
