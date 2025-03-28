@@ -16,7 +16,7 @@ var routesMap = map[string]httpHandleFunc{
 }
 
 func init() {
-	logger.Log("webreqhandler.init")
+	// logger.Log("webreqhandler.init")
 }
 
 func ListenAndServe(port int) {
@@ -31,7 +31,7 @@ func ListenAndServe(port int) {
 			logger.Log("创建文件夹成功==", dirPath)
 		}
 	} else {
-		logger.Log("已经存在文件夹==", dirPath)
+		// logger.Log("已经存在文件夹==", dirPath)
 	}
 
 	// 设置静态文件服务器的根目录为当前目录
@@ -41,7 +41,7 @@ func ListenAndServe(port int) {
 
 	/*使用键输出地图值 */
 	for route := range routesMap {
-		logger.Log("routesMap=======", route, routesMap[route])
+		// logger.Log("routesMap=======", route, routesMap[route])
 		http.HandleFunc(route, routesMap[route])
 	}
 	http.ListenAndServe(":"+portStr, nil)
