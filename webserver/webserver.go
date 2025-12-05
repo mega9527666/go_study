@@ -17,4 +17,6 @@ func main() {
 	logger.Info("webserver.main", port)
 	webreqhandler.ListenAndServe(port)
 
+	var a webreqhandler.Response = 
+
 }
