@@ -13,7 +13,7 @@ const (
 	LOG_LEVEL_ERROR
 )
 
-const TAG = "MegaLog"
+const TAG = "[MegaLog]"
 
 var Log_Level_Names = [5]string{"debug", "log", "info", "warn", "error"}
 var LOG_LEVEL = LOG_LEVEL_DEBUG
