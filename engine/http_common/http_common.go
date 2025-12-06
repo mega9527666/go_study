@@ -1,13 +1,17 @@
 package http_common
 
 import (
+	"io"
 	"mega/engine/logger"
+	"net"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type HttpHandleFunc func(w http.ResponseWriter, r *http.Request)
+type HttpCustomHandleFunc func(w http.ResponseWriter, r *http.Request, ip string)
 
 func ListenAndServe(port int, routesMap map[string]HttpHandleFunc) {
 	var portStr string = strconv.Itoa(port)
@@ -38,7 +42,7 @@ func ListenAndServe(port int, routesMap map[string]HttpHandleFunc) {
 }
 
 // 通用的分发函数（中间件）
-func Dispatcher(next HttpHandleFunc) HttpHandleFunc {
+func Dispatcher(next HttpCustomHandleFunc) HttpHandleFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 允许所有来源，生产环境可改为指定域名
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -48,25 +52,52 @@ func Dispatcher(next HttpHandleFunc) HttpHandleFunc {
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization,X-token")
 		// 如果你希望前端能够读取到某些响应头，则用 Expose-Headers
 		w.Header().Set("Access-Control-Expose-Headers", "X-My-Custom-Header")
+		// 在执行实际的请求处理之前做一些处理
 
-		// go indexHandler(w, r, next)
 		var contentType string = r.Header.Get("content-type")
 		if len(contentType) == 0 {
 			r.Header.Set("content-type", "application/json")
 		}
 		logger.Log("dispatcher=param=Content-Type", r.Header.Get("content-type"))
-		logger.Log("dispatcher=param=X-token", r.Header.Get("X-token"))
-		logger.Log("dispatcher=param=x-token", r.Header.Get("x-token"))
 		commonHandler(w, r, next)
 	}
 }
 
-func commonHandler(w http.ResponseWriter, r *http.Request, next HttpHandleFunc) {
-	// 在执行实际的请求处理之前做一些处理
-	logger.Log("通用分发函数：请求到来，执行前处理...", r.RequestURI, r.Host, r.RemoteAddr)
+func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandleFunc) {
+	var ip string = GetClientIP(r)
+	logger.Log("通用分发函数：请求到来，执行前处理...", ip)
+	// r.Body
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "commonHandler read body error", http.StatusBadRequest)
+		return
+	}
+	logger.Log("通用分发函数：body", body)
+	logger.Log("通用分发函数：body2", string(body))
+	// fmt.Println("Body:", string(body))
 	// 你可以在这里加入公共的处理逻辑，例如验证、日志记录等
 	// 调用下一个处理函数
-	next(w, r)
+	next(w, r, ip)
 	// 在实际的请求处理之后做一些处理
 	logger.Log("通用分发函数：请求处理完毕，执行后处理...", r.RequestURI, r.Host, r.RemoteAddr)
+}
+
+func GetClientIP(r *http.Request) string {
+	// 1. X-Forwarded-For
+	xff := r.Header.Get("X-Forwarded-For")
+	if xff != "" {
+		// 可能是多IP: "client, proxy1, proxy2"
+		ips := strings.Split(xff, ",")
+		return strings.TrimSpace(ips[0])
+	}
+
+	// 2. X-Real-IP
+	xrp := r.Header.Get("X-Real-Ip")
+	if xrp != "" {
+		return xrp
+	}
+
+	// 3. RemoteAddr（兜底）
+	ip, _, _ := net.SplitHostPort(r.RemoteAddr)
+	return ip
 }

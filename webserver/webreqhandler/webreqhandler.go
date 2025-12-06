@@ -9,9 +9,9 @@ import (
 )
 
 var routesMap = map[string]http_common.HttpHandleFunc{
-	"/mega":        http_common.HttpHandleFunc(megaHandler),
-	"/login_jhao":  http_common.HttpHandleFunc(login_jhao_handler),
-	"/init_client": http_common.HttpHandleFunc(init_client_handler),
+	"/mega":        http_common.Dispatcher(megaHandler),
+	"/login_jhao":  http_common.Dispatcher(login_jhao_handler),
+	"/init_client": http_common.Dispatcher(init_client_handler),
 }
 
 func init() {
@@ -22,8 +22,8 @@ func ListenAndServe(port int) {
 	http_common.ListenAndServe(port, routesMap)
 }
 
-func megaHandler(w http.ResponseWriter, r *http.Request) {
-	logger.Log("megaHandler=Host=", r.RequestURI, r.Host, r.RemoteAddr)
+func megaHandler(w http.ResponseWriter, r *http.Request, ip string) {
+	logger.Log("megaHandler=Host=", ip)
 }
 
 type Response struct {
@@ -38,7 +38,7 @@ type User struct {
 	Email string `json:"email"`
 }
 
-func login_jhao_handler(w http.ResponseWriter, r *http.Request) {
+func login_jhao_handler(w http.ResponseWriter, r *http.Request, ip string) {
 	logger.Log("login_jhao_handler==", r.RequestURI, r.Host, r.RemoteAddr)
 	logger.Log("login_jhao_handler=param=Body", r.Body)
 	// logger.Log("login_jhao_handler=param=Header", r.Header)
@@ -105,7 +105,6 @@ func login_jhao_handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func init_client_handler(w http.ResponseWriter, r *http.Request) {
-	logger.Log("init_client_handler==", r.RequestURI, r.Host, r.RemoteAddr)
-	logger.Log("init_client_handler=param=Body", r.Body)
+func init_client_handler(w http.ResponseWriter, r *http.Request, ip string) {
+	logger.Log("init_client_handler=param=Body", ip)
 }
