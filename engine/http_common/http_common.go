@@ -1,10 +1,12 @@
 package http_common
 
 import (
+	"encoding/json"
 	"io"
 	"mega/engine/logger"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -74,6 +76,33 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 	}
 	logger.Log("通用分发函数：body", body)
 	logger.Log("通用分发函数：body2", string(body))
+
+	// 1) 解析 form
+	datas, err := url.ParseQuery(string(body))
+	if err != nil {
+		logger.Error("commonHandler error=", err)
+		return
+	}
+	logger.Log("commonHandler datas type", datas)
+	dataStr := datas["data"][0]
+	k := datas["k"][0]
+
+	var dataObj map[string]interface{}
+	if err := json.Unmarshal([]byte(dataStr), &dataObj); err != nil {
+		// panic(err)
+		logger.Error("commonHandler error=", err)
+		return
+	}
+
+	// fmt.Printf("data type-%T\n", datas["data"])
+	// fmt.Printf("data j type %T\n", datas["k"])
+	logger.Log("commonHandler datas", datas)
+	logger.Log("commonHandler dataStr", dataStr)
+	logger.Log("commonHandler k", k)
+	logger.Log("commonHandler dataObj", dataObj)
+	logger.Log("commonHandler channel", dataObj["channel"])
+	logger.Log("commonHandler t", dataObj["t"])
+	logger.Log("commonHandler v", dataObj["v"])
 	// fmt.Println("Body:", string(body))
 	// 你可以在这里加入公共的处理逻辑，例如验证、日志记录等
 	// 调用下一个处理函数
