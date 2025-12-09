@@ -105,7 +105,8 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 	logger.Log("commonHandler t", dataObj["t"])
 	logger.Log("commonHandler v", dataObj["v"])
 
-	Md5Helper.GetMd5_default()
+	var dataK string = Md5Helper.GetMd5_default(dataStr)
+	logger.Log("commonHandler checkKey=", dataK, k == dataK)
 	// let
 	// fmt.Println("Body:", string(body))
 	// 你可以在这里加入公共的处理逻辑，例如验证、日志记录等
