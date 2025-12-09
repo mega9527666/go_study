@@ -3,6 +3,7 @@ package http_common
 import (
 	"encoding/json"
 	"io"
+	Md5Helper "mega/engine"
 	"mega/engine/logger"
 	"net"
 	"net/http"
@@ -13,7 +14,7 @@ import (
 )
 
 type HttpHandleFunc func(w http.ResponseWriter, r *http.Request)
-type HttpCustomHandleFunc func(w http.ResponseWriter, r *http.Request, ip string)
+type HttpCustomHandleFunc func(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string]interface{})
 
 func ListenAndServe(port int, routesMap map[string]HttpHandleFunc) {
 	var portStr string = strconv.Itoa(port)
@@ -103,10 +104,13 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 	logger.Log("commonHandler channel", dataObj["channel"])
 	logger.Log("commonHandler t", dataObj["t"])
 	logger.Log("commonHandler v", dataObj["v"])
+
+	Md5Helper.GetMd5_default()
+	// let
 	// fmt.Println("Body:", string(body))
 	// 你可以在这里加入公共的处理逻辑，例如验证、日志记录等
 	// 调用下一个处理函数
-	next(w, r, ip)
+	next(w, r, ip, dataObj)
 	// 在实际的请求处理之后做一些处理
 	logger.Log("通用分发函数：请求处理完毕，执行后处理...", r.RequestURI, r.Host, r.RemoteAddr)
 }

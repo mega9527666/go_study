@@ -9,8 +9,8 @@ import (
 )
 
 var routesMap = map[string]http_common.HttpHandleFunc{
-	"/mega":        http_common.Dispatcher(megaHandler),
-	"/login_jhao":  http_common.Dispatcher(login_jhao_handler),
+	// "/mega":        http_common.Dispatcher(megaHandler),
+	// "/login_jhao":  http_common.Dispatcher(login_jhao_handler),
 	"/init_client": http_common.Dispatcher(init_client_handler),
 }
 
@@ -105,6 +105,6 @@ func login_jhao_handler(w http.ResponseWriter, r *http.Request, ip string) {
 	}
 }
 
-func init_client_handler(w http.ResponseWriter, r *http.Request, ip string) {
+func init_client_handler(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string]interface{}) {
 	logger.Log("init_client_handler=param=Body", ip)
 }
