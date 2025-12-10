@@ -74,20 +74,20 @@ func Dispatcher(next HttpCustomHandleFunc) HttpHandleFunc {
 
 func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandleFunc) {
 	var ip string = GetClientIP(r)
-	logger.Log("通用分发函数：请求到来，执行前处理...", ip)
+	// logger.Log("通用分发函数：请求到来，执行前处理...", ip)
 	// r.Body
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "commonHandler read body error", http.StatusBadRequest)
 		return
 	}
-	logger.Log("通用分发函数：body", body)
-	logger.Log("通用分发函数：body2", string(body))
+	// logger.Log("通用分发函数：body", body)
+	// logger.Log("通用分发函数：body2", string(body))
 
-	// 1) 解析 form
 	datas, err := url.ParseQuery(string(body))
 	if err != nil {
 		logger.Error("commonHandler error=", err)
+		SendErrorCode(w, HttpResponseModel{Code: error_code.ErrParam})
 		return
 	}
 	logger.Log("commonHandler datas type", datas)
@@ -96,44 +96,39 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 
 	var dataObj map[string]interface{}
 	if err := json.Unmarshal([]byte(dataStr), &dataObj); err != nil {
-		// panic(err)
 		logger.Error("commonHandler error=", err)
+		SendErrorCode(w, HttpResponseModel{Code: error_code.ErrParam})
 		return
 	}
 
 	// fmt.Printf("data type-%T\n", datas["data"])
 	// fmt.Printf("data j type %T\n", datas["k"])
-	logger.Log("commonHandler datas", datas)
-	logger.Log("commonHandler dataStr", dataStr)
-	logger.Log("commonHandler k", k)
-	logger.Log("commonHandler dataObj", dataObj)
-	logger.Log("commonHandler channel", dataObj["channel"])
-	logger.Log("commonHandler t", dataObj["t"])
-	logger.Log("commonHandler v", dataObj["v"])
-
+	// logger.Log("commonHandler datas", datas)
+	// logger.Log("commonHandler dataStr", dataStr)
+	// logger.Log("commonHandler k", k)
+	// logger.Log("commonHandler dataObj", dataObj)
+	// logger.Log("commonHandler channel", dataObj["channel"])
+	// logger.Log("commonHandler t", dataObj["t"])
+	// logger.Log("commonHandler v", dataObj["v"])
 	// var dataK string = md5_helper.GetMd5_encrypt(dataStr)
 	// var dataK string = md5_helper.GetMd5_default(dataStr)
 	var dataK_encry string = md5_helper.GetMd5_encrypt(dataStr)
 	// logger.Log("commonHandler checkKey=", dataK, k == dataK)
 	// logger.Log("commonHandler dataK_encry=", dataK_encry, k == dataK_encry)
 	if k == dataK_encry {
-		// let
-		// fmt.Println("Body:", string(body))
-		// 你可以在这里加入公共的处理逻辑，例如验证、日志记录等
-		// 调用下一个处理函数
 		next(w, r, ip, dataObj)
-		// 在实际的请求处理之后做一些处理
-		logger.Log("通用分发函数：请求处理完毕，执行后处理...", r.RequestURI, r.Host, r.RemoteAddr)
 	} else {
-		// 创建一个响应对象
-		var responseModel HttpResponseModel = HttpResponseModel{Code: error_code.ErrBackMd5}
-		// 向客户端写入响应内容
-		w.WriteHeader(http.StatusOK)
-		// 将结构体编码为 JSON 并写入响应体
-		encodeWrr := json.NewEncoder(w).Encode(responseModel)
-		if encodeWrr != nil {
-			logger.Error("commonHandler=error=", encodeWrr)
-		}
+		SendErrorCode(w, HttpResponseModel{Code: error_code.ErrBadMd5})
+	}
+}
+
+func SendErrorCode(w http.ResponseWriter, responseModel HttpResponseModel) {
+	// 向客户端写入响应内容
+	w.WriteHeader(http.StatusOK)
+	// 将结构体编码为 JSON 并写入响应体
+	encodeWrr := json.NewEncoder(w).Encode(responseModel)
+	if encodeWrr != nil {
+		logger.Error("commonHandler=error=", encodeWrr)
 	}
 }
 

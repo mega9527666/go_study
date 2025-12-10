@@ -21,5 +21,6 @@ var (
 	ErrForbidden    = New(403, "forbidden")
 	ErrNotFound     = New(404, "not found")
 	ErrInternal     = New(500, "internal server error")
-	ErrBackMd5      = New(1000, "back md5 key")
+	ErrBadMd5       = New(1000, "bad md5 key")
+	ErrParam        = New(1001, "ErrParam")
 )
