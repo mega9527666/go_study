@@ -18,7 +18,7 @@ type HttpHandleFunc func(w http.ResponseWriter, r *http.Request)
 type HttpCustomHandleFunc func(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string]interface{})
 
 type HttpResponseModel struct {
-	Code  error_code.Code
+	Code    error_code.Code
 	Message string `json:"message"`
 }
 
@@ -126,14 +126,13 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 		logger.Log("通用分发函数：请求处理完毕，执行后处理...", r.RequestURI, r.Host, r.RemoteAddr)
 	} else {
 		// 创建一个响应对象
-		var response  HttpResponseModel = HttpResponseModel{Message: "error k", Code: }
+		var responseModel HttpResponseModel = HttpResponseModel{Code: error_code.ErrBackMd5}
 		// 向客户端写入响应内容
 		w.WriteHeader(http.StatusOK)
 		// 将结构体编码为 JSON 并写入响应体
-		encodeWrr := json.NewEncoder(w).Encode(response)
-		// _, err := w.Write([]byte("Hello, abcd!"))
+		encodeWrr := json.NewEncoder(w).Encode(responseModel)
 		if encodeWrr != nil {
-			logger.Error("login_jhao_handler=error=", encodeWrr)
+			logger.Error("commonHandler=error=", encodeWrr)
 		}
 	}
 }
