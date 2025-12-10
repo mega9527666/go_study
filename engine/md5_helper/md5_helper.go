@@ -18,6 +18,8 @@ func GetMd5_default(input string) string {
 }
 
 func GetMd5_encrypt(input string) string {
-	var md5_value string = GetMd5_default("{" + input + private_key + "}")
+	var needStr string = "{" + input + private_key + "}"
+	var md5_value string = GetMd5_default(needStr)
+	// logger.Log("GetMd5_encrypt====", input, private_key, needStr, md5_value)
 	return md5_value
 }

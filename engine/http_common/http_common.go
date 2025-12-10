@@ -3,6 +3,7 @@ package http_common
 import (
 	"encoding/json"
 	"io"
+	"mega/engine/error_code"
 	"mega/engine/logger"
 	"mega/engine/md5_helper"
 	"net"
@@ -15,6 +16,11 @@ import (
 
 type HttpHandleFunc func(w http.ResponseWriter, r *http.Request)
 type HttpCustomHandleFunc func(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string]interface{})
+
+type HttpResponseModel struct {
+	Code  error_code.Code
+	Message string `json:"message"`
+}
 
 func ListenAndServe(port int, routesMap map[string]HttpHandleFunc) {
 	var portStr string = strconv.Itoa(port)
@@ -105,15 +111,31 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 	logger.Log("commonHandler t", dataObj["t"])
 	logger.Log("commonHandler v", dataObj["v"])
 
-	var dataK string = md5_helper.GetMd5_default(dataStr)
-	logger.Log("commonHandler checkKey=", dataK, k == dataK)
-	// let
-	// fmt.Println("Body:", string(body))
-	// 你可以在这里加入公共的处理逻辑，例如验证、日志记录等
-	// 调用下一个处理函数
-	next(w, r, ip, dataObj)
-	// 在实际的请求处理之后做一些处理
-	logger.Log("通用分发函数：请求处理完毕，执行后处理...", r.RequestURI, r.Host, r.RemoteAddr)
+	// var dataK string = md5_helper.GetMd5_encrypt(dataStr)
+	// var dataK string = md5_helper.GetMd5_default(dataStr)
+	var dataK_encry string = md5_helper.GetMd5_encrypt(dataStr)
+	// logger.Log("commonHandler checkKey=", dataK, k == dataK)
+	// logger.Log("commonHandler dataK_encry=", dataK_encry, k == dataK_encry)
+	if k == dataK_encry {
+		// let
+		// fmt.Println("Body:", string(body))
+		// 你可以在这里加入公共的处理逻辑，例如验证、日志记录等
+		// 调用下一个处理函数
+		next(w, r, ip, dataObj)
+		// 在实际的请求处理之后做一些处理
+		logger.Log("通用分发函数：请求处理完毕，执行后处理...", r.RequestURI, r.Host, r.RemoteAddr)
+	} else {
+		// 创建一个响应对象
+		var response  HttpResponseModel = HttpResponseModel{Message: "error k", Code: }
+		// 向客户端写入响应内容
+		w.WriteHeader(http.StatusOK)
+		// 将结构体编码为 JSON 并写入响应体
+		encodeWrr := json.NewEncoder(w).Encode(response)
+		// _, err := w.Write([]byte("Hello, abcd!"))
+		if encodeWrr != nil {
+			logger.Error("login_jhao_handler=error=", encodeWrr)
+		}
+	}
 }
 
 func GetClientIP(r *http.Request) string {
