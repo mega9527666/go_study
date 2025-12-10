@@ -20,6 +20,7 @@ type HttpCustomHandleFunc func(w http.ResponseWriter, r *http.Request, ip string
 type HttpResponseModel struct {
 	Code    error_code.Code
 	Message string `json:"message"`
+	Data    string `json:"data"`
 }
 
 func ListenAndServe(port int, routesMap map[string]HttpHandleFunc) {
