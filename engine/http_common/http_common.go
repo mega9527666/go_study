@@ -3,8 +3,8 @@ package http_common
 import (
 	"encoding/json"
 	"io"
-	Md5Helper "mega/engine"
 	"mega/engine/logger"
+	"mega/engine/md5_helper"
 	"net"
 	"net/http"
 	"net/url"
@@ -105,7 +105,7 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 	logger.Log("commonHandler t", dataObj["t"])
 	logger.Log("commonHandler v", dataObj["v"])
 
-	var dataK string = Md5Helper.GetMd5_default(dataStr)
+	var dataK string = md5_helper.GetMd5_default(dataStr)
 	logger.Log("commonHandler checkKey=", dataK, k == dataK)
 	// let
 	// fmt.Println("Body:", string(body))
