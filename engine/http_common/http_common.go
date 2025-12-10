@@ -20,7 +20,8 @@ type HttpCustomHandleFunc func(w http.ResponseWriter, r *http.Request, ip string
 type HttpResponseModel struct {
 	Code    error_code.Code
 	Message string `json:"message"`
-	Data    string `json:"data"`
+	// Data    string `json:"data"`
+	Data map[string]interface{}
 }
 
 func ListenAndServe(port int, routesMap map[string]HttpHandleFunc) {
@@ -88,7 +89,7 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 	datas, err := url.ParseQuery(string(body))
 	if err != nil {
 		logger.Error("commonHandler error=", err)
-		SendErrorCode(w, HttpResponseModel{Code: error_code.ErrParam})
+		SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrParam})
 		return
 	}
 	logger.Log("commonHandler datas type", datas)
@@ -98,7 +99,7 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 	var dataObj map[string]interface{}
 	if err := json.Unmarshal([]byte(dataStr), &dataObj); err != nil {
 		logger.Error("commonHandler error=", err)
-		SendErrorCode(w, HttpResponseModel{Code: error_code.ErrParam})
+		SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrParam})
 		return
 	}
 
@@ -119,11 +120,11 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 	if k == dataK_encry {
 		next(w, r, ip, dataObj)
 	} else {
-		SendErrorCode(w, HttpResponseModel{Code: error_code.ErrBadMd5})
+		SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrBadMd5})
 	}
 }
 
-func SendErrorCode(w http.ResponseWriter, responseModel HttpResponseModel) {
+func SendHttpResponseModel(w http.ResponseWriter, responseModel HttpResponseModel) {
 	// 向客户端写入响应内容
 	w.WriteHeader(http.StatusOK)
 	// 将结构体编码为 JSON 并写入响应体
