@@ -1,6 +1,7 @@
 package main
 
 import (
+	"mega/account_server/account_reqhandler"
 	"mega/engine/logger"
 	"os"
 	"strconv"
@@ -14,6 +15,5 @@ func main() {
 		return
 	}
 	logger.Info("account_server.main", port)
-	// webreqhandler.ListenAndServe(port)
-
+	account_reqhandler.ListenAndServe(port)
 }
