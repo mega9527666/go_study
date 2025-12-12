@@ -10,7 +10,8 @@ portList=(
 for(( i=0;i<${#portList[@]};i++)) do
     port=${portList[i]}
 echo "port="$port
-pm2 start ./build/go_webserver --name go_webserver-$port   --output="./logs/go_webserver"-$port".log" --log-date-format="YYYY-MM-DD HH:mm:ss:SSS"   -- $port $env
+echo "env="$env
+pm2 start ./build/go_webserver  --name go_webserver-$port   --output="./logs/go_webserver"-$port".log" --log-date-format="YYYY-MM-DD HH:mm:ss:SSS"   -- $port $env  
 done;
 
 

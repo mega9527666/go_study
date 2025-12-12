@@ -1,5 +1,10 @@
 package main
 
+import (
+	"mega/engine/logger"
+	"os"
+)
+
 const (
 	None = iota
 	Male
@@ -7,6 +12,8 @@ const (
 )
 
 func main() {
+
+	logger.Info("test.main", os.Args)
 	// dateutil.FormatNow()
 	// dateutil.FormatTime(1742899698)
 
