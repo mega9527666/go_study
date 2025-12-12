@@ -1,1 +1,3 @@
-go build -o ./build/mega_go_webserver webserver/webserver.go
+go build -o ./build/go_webserver webserver/webserver.go
+
+# go build -o ./build/_webserver webserver/webserver.go
