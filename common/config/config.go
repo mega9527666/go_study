@@ -1,9 +1,15 @@
 package config
 
-var (
-	Dev    = 1
-	Test   = 2
-	Online = 3
-)
+type envType struct {
+	Dev    int
+	Test   int
+	Online int
+}
 
-var Environment = Dev
+var EnvironmentType = envType{
+	Dev:    1,
+	Test:   2,
+	Online: 3,
+}
+
+var Environment = EnvironmentType.Dev
