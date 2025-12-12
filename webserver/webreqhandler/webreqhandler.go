@@ -25,6 +25,7 @@ func init_client_handler(w http.ResponseWriter, r *http.Request, ip string, data
 	respModel.Data = map[string]interface{}{
 		"need_hotupdate": false, //需要热更新
 		"force_update":   false,
+		"ip":             ip,
 	}
 	http_common.SendHttpResponseModel(w, respModel)
 }

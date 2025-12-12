@@ -18,9 +18,7 @@ type HttpHandleFunc func(w http.ResponseWriter, r *http.Request)
 type HttpCustomHandleFunc func(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string]interface{})
 
 type HttpResponseModel struct {
-	Code    error_code.Code
-	Message string `json:"message"`
-	// Data    string `json:"data"`
+	Code error_code.Code
 	Data map[string]interface{}
 }
 
