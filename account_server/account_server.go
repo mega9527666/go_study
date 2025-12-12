@@ -15,5 +15,6 @@ func main() {
 		return
 	}
 	logger.Info("account_server.main", port)
+
 	account_reqhandler.ListenAndServe(port)
 }
