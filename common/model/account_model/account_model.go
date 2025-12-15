@@ -1,6 +1,11 @@
 package account_model
 
-import "mega/engine/mysql_client"
+import (
+	"database/sql"
+	"mega/engine/logger"
+	"mega/engine/mysql_client"
+	"time"
+)
 
 // Account 对应 t_accounts 表的结构体
 type Account struct {
@@ -59,4 +64,51 @@ func IsAccountExist(client *mysql_client.Db_client, account string, callback fun
 		// 调用回调函数
 		callback(count > 0, err)
 	}()
+}
+
+// Insert 插入账户记录
+func InsertAccount(db *sql.DB, account *Account) error {
+	// 准备 SQL 语句
+	sqlStr := `
+	INSERT INTO t_accounts (
+		account, pass, token, account_type, status, ip, nick_name,
+		channel, os, phone_type, bundle_name, system_version,
+		create_time, last_login_time, phone, sex, headimgurl
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	`
+
+	// 设置时间戳（如果未设置）
+	if account.CreateTime == 0 {
+		account.CreateTime = time.Now().UnixMilli()
+	}
+	if account.LastLoginTime == 0 {
+		account.LastLoginTime = time.Now().UnixMilli()
+	}
+
+	// 执行插入
+	_, err := db.Exec(sqlStr,
+		account.Account,
+		account.Pass,
+		account.Token,
+		account.AccountType,
+		account.Status,
+		account.IP,
+		account.NickName,
+		account.Channel,
+		account.OS,
+		account.PhoneType,
+		account.BundleName,
+		account.SystemVersion,
+		account.CreateTime,
+		account.LastLoginTime,
+		account.Phone,
+		account.Sex,
+		account.Headimgurl,
+	)
+
+	if err != nil {
+		logger.Warn("插入账户失败=", err)
+	}
+
+	return nil
 }
