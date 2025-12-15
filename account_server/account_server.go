@@ -3,6 +3,7 @@ package main
 import (
 	"mega/account_server/account_reqhandler"
 	"mega/common/config"
+	dbconfig "mega/common/db_config"
 	"mega/engine/logger"
 	"os"
 	"strconv"
@@ -22,6 +23,7 @@ func main() {
 	}
 
 	config.Environment = env
+	dbconfig.InitDb(config.Environment)
 	config.ServerType = config.ServerType_List.Account_server
 	logger.Info("account_server.main", os.Args, env, port)
 

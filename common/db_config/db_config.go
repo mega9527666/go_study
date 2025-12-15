@@ -4,12 +4,10 @@ import (
 	"mega/engine/logger"
 )
 
-type dbType int
-
 const (
-	DbType_Dev    dbType = 1
-	DbType_Test   dbType = 2
-	DbType_Online dbType = 3
+	DbType_Dev    int = 1
+	DbType_Test   int = 2
+	DbType_Online int = 3
 )
 
 // ==================
@@ -36,13 +34,13 @@ type DbConfig struct {
 // 当前 DB 类型
 // ==================
 
-var NowDbType dbType = DbType_Dev
+var NowDbType int = DbType_Dev
 
 // ==================
 // DB 配置表
 // ==================
 
-var dbMap = map[dbType]*DbConfig{
+var dbMap = map[int]*DbConfig{
 	DbType_Dev: {
 		Host: "127.0.0.1",
 		Port: 3306,
@@ -67,14 +65,14 @@ var dbMap = map[dbType]*DbConfig{
 // 初始化
 // ==================
 
-func InitDb(dbType dbType) {
+func InitDb(dbType int) {
 	NowDbType = dbType
 }
 
 // ==================
 // 获取 DB 配置
 // ==================
-func GetDbConfig(dbType dbType) *DbConfig {
+func GetDbConfig(dbType int) *DbConfig {
 	db, ok := dbMap[dbType]
 	if !ok {
 		logger.Warn("GetDbConfig error 不存在数据库类型", dbType, dbMap)
