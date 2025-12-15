@@ -28,6 +28,7 @@ type Account struct {
 	Headimgurl    string `db:"headimgurl" json:"headimgurl"`
 }
 
+//通道写法
 // func IsAccountExist(client mysql_client.Db_client, account string) <-chan struct {
 // 	bool
 // 	error
@@ -66,8 +67,17 @@ func IsAccountExist(client *mysql_client.Db_client, account string, callback fun
 	}()
 }
 
+func InsertAccount_callback(db *sql.DB, account *Account, callback func(int64, error)) {
+	go func() {
+		id, err := InsertAccount(db, account)
+		if callback != nil {
+			callback(id, err)
+		}
+	}()
+}
+
 // Insert 插入账户记录
-func InsertAccount(db *sql.DB, account *Account) error {
+func InsertAccount(db *sql.DB, account *Account) (int64, error) {
 	// 准备 SQL 语句
 	sqlStr := `
 	INSERT INTO t_accounts (
@@ -86,7 +96,7 @@ func InsertAccount(db *sql.DB, account *Account) error {
 	}
 
 	// 执行插入
-	_, err := db.Exec(sqlStr,
+	result, err := db.Exec(sqlStr,
 		account.Account,
 		account.Pass,
 		account.Token,
@@ -110,5 +120,12 @@ func InsertAccount(db *sql.DB, account *Account) error {
 		logger.Warn("插入账户失败=", err)
 	}
 
-	return nil
+	// 获取自增 ID
+	id, err := result.LastInsertId()
+	if err != nil {
+		logger.Warn("获取自增ID失败 =", err)
+		return 0, err
+	}
+
+	return id, nil
 }
