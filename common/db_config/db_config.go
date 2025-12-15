@@ -45,19 +45,19 @@ var dbMap = map[int]*DbConfig{
 		Host: "127.0.0.1",
 		Port: 3306,
 		User: "root",
-		Pass: "f301517757c8cf6c",
+		Pass: "Mega@9527",
 	},
 	DbType_Test: {
 		Host: "127.0.0.1",
 		Port: 3306,
 		User: "root",
-		Pass: "f301517757c8cf6c",
+		Pass: "Mega@9527",
 	},
 	DbType_Online: {
 		Host: "127.0.0.1",
 		Port: 3306,
 		User: "root",
-		Pass: "f301517757c8cf6c",
+		Pass: "Mega@9527",
 	},
 }
 
