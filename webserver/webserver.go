@@ -22,7 +22,7 @@ func main() {
 	}
 
 	config.Environment = env
-	logger.Info("webserver.main", dfdd, os.Args, env, port)
+	logger.Info("webserver.main", os.Args, env, port)
 	webreqhandler.ListenAndServe(port)
 
 }
