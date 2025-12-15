@@ -50,6 +50,51 @@ func ListenAndServe(port int, routesMap map[string]HttpHandleFunc) {
 	http.ListenAndServe(":"+portStr, nil)
 }
 
+func ListenAndServeTLS(port int, routesMap map[string]HttpHandleFunc, crtPath string, keyPath string) {
+	var portStr string = strconv.Itoa(port)
+	var dirPath string = "public/public" + portStr
+	_, err := os.Stat(dirPath)
+	if os.IsNotExist(err) {
+		err := os.MkdirAll(dirPath, 0755)
+		if err != nil {
+			logger.Log("创建文件夹失败==", dirPath, err)
+		} else {
+			logger.Log("创建文件夹成功==", dirPath)
+		}
+	} else {
+		// logger.Log("已经存在文件夹==", dirPath)
+	}
+	mux := http.NewServeMux()
+	// 静态文件服务
+	// https://domain.com/static/xxx
+	fs := http.FileServer(http.Dir("./static"))
+	// 设置路由规则，将所有请求重定向到静态文件服务器
+	mux.Handle("/", fs)
+	/*使用键输出地图值 */
+	for route := range routesMap {
+		// logger.Log("routesMap=======", route, routesMap[route])
+		mux.HandleFunc(route, routesMap[route])
+	}
+	addr := ":" + portStr
+	// httpError := http.ListenAndServeTLS(
+	// 	addr,
+	// 	"./server.crt",
+	// 	"./server.key",
+	// 	mux,
+	// )
+
+	httpError := http.ListenAndServeTLS(
+		addr,
+		crtPath,
+		keyPath,
+		mux,
+	)
+	if err != nil {
+		// log.Fatal(err)
+		logger.Error("ListenAndServeTLS error", port, crtPath, keyPath, httpError)
+	}
+}
+
 // 通用的分发函数（中间件）
 func Dispatcher(next HttpCustomHandleFunc) HttpHandleFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
