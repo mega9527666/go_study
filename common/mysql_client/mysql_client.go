@@ -23,8 +23,9 @@ func InitDB(dbName string, dbConfig dbconfig.DbConfig) error {
 	db.SetMaxIdleConns(10)
 	db.SetConnMaxLifetime(time.Hour)
 
-	// 验证连接
+	// 验证连接  sql.Open 不会立刻连数据库，Ping() 才会。
 	if err := db.Ping(); err != nil {
+		logger.Warn("InitDB ping error ", dbName, dbConfig, err)
 		return err
 	}
 
