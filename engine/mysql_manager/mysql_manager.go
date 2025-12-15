@@ -2,8 +2,8 @@ package mysql_manager
 
 import (
 	"mega/common/db_config"
-	"mega/common/mysql_client"
 	"mega/engine/logger"
+	"mega/engine/mysql_client"
 	"strconv"
 	"sync"
 )
