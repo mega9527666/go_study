@@ -1,4 +1,4 @@
-package dbconfig
+package db_config
 
 import (
 	"mega/engine/logger"
@@ -90,7 +90,7 @@ user:password        账号密码
 &parseTime=true      时间解析	时间字段自动转成 Go 的 time.Time
 &loc=Local           时区		用服务器本地时区
 */
-func GetDBDns(dbConfig DbConfig, dbName string) string {
+func GetDBDns(dbConfig *DbConfig, dbName string) string {
 	// dsn := "user:password@tcp(127.0.0.1:3306)/testdb?charset=utf8mb4&parseTime=true&loc=Local"
 	dsn := "user:password@tcp(" + dbConfig.Host + ":" + strconv.Itoa(dbConfig.Port) + ")/" + dbName + "?charset=utf8mb4&parseTime=true&loc=Local"
 	return dsn
