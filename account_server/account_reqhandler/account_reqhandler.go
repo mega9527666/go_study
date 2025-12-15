@@ -1,8 +1,10 @@
 package account_reqhandler
 
 import (
+	"mega/engine/error_code"
 	"mega/engine/http_common"
 	"mega/engine/logger"
+	"mega/engine/string_util"
 	"net/http"
 )
 
@@ -16,6 +18,18 @@ func ListenAndServe(port int) {
 
 func register(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string]interface{}) {
 	logger.Log("register=", ip, dataObj)
+	account, ok := string_util.GetStringFromMap(dataObj, "account")
+	if !ok {
+		http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrParam})
+		return
+	}
+	logger.Log("register=====account", account)
+	pass, ok := string_util.GetStringFromMap(dataObj, "pass")
+	if !ok {
+		http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrParam})
+		return
+	}
+	logger.Log("register=====pass", pass)
 	// var respModel http_common.HttpResponseModel = http_common.HttpResponseModel{Code: error_code.OK}
 	// respModel.Data = map[string]interface{}{
 	// 	"need_hotupdate": false, //需要热更新
