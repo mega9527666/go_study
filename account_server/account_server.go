@@ -22,6 +22,7 @@ func main() {
 	}
 
 	config.Environment = env
+	config.ServerType = config.ServerType_List.Account_server
 	logger.Info("account_server.main", os.Args, env, port)
 
 	account_reqhandler.ListenAndServe(port)
