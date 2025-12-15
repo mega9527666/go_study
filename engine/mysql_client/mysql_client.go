@@ -2,19 +2,22 @@ package mysql_client
 
 import (
 	"database/sql"
-	dbconfig "mega/common/db_config"
+	"mega/common/db_config"
 	"mega/engine/logger"
 	"time"
+
+	// ✅ 必须导入 MySQL 驱动
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type Db_client struct {
 	DbName   string
-	DbConfig *dbconfig.DbConfig
+	DbConfig *db_config.DbConfig
 	Db       *sql.DB
 }
 
 // 构造函数
-func newDbClient(dbName string, config *dbconfig.DbConfig, db *sql.DB) *Db_client {
+func newDbClient(dbName string, config *db_config.DbConfig, db *sql.DB) *Db_client {
 	return &Db_client{
 		DbName:   dbName,
 		DbConfig: config,
@@ -22,8 +25,8 @@ func newDbClient(dbName string, config *dbconfig.DbConfig, db *sql.DB) *Db_clien
 	}
 }
 
-func InitDB(dbName string, dbConfig *dbconfig.DbConfig) (*Db_client, error) {
-	dsn := dbconfig.GetDBDns(dbConfig, dbName)
+func InitDB(dbName string, dbConfig *db_config.DbConfig) (*Db_client, error) {
+	dsn := db_config.GetDBDns(dbConfig, dbName)
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {

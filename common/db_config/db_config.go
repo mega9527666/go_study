@@ -92,6 +92,7 @@ user:password        账号密码
 */
 func GetDBDns(dbConfig *DbConfig, dbName string) string {
 	// dsn := "user:password@tcp(127.0.0.1:3306)/testdb?charset=utf8mb4&parseTime=true&loc=Local"
-	dsn := "user:password@tcp(" + dbConfig.Host + ":" + strconv.Itoa(dbConfig.Port) + ")/" + dbName + "?charset=utf8mb4&parseTime=true&loc=Local"
+	// dsn := "user:password@tcp(" + dbConfig.Host + ":" + strconv.Itoa(dbConfig.Port) + ")/" + dbName + "?charset=utf8mb4&parseTime=true&loc=Local"
+	dsn := dbConfig.User + ":" + dbConfig.Pass + "@tcp(" + dbConfig.Host + ":" + strconv.Itoa(dbConfig.Port) + ")/" + dbName + "?charset=utf8mb4&parseTime=true&loc=Local"
 	return dsn
 }

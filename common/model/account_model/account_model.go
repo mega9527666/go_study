@@ -23,11 +23,40 @@ type Account struct {
 	Headimgurl    string `db:"headimgurl" json:"headimgurl"`
 }
 
-// ✅ 纯数据库查询，不需要锁
-func IsAccountExist(client mysql_client.Db_client, account string) (bool, error) {
-	// 数据库连接是并发安全的（单个连接不支持并发，但连接池支持）
-	// sql.DB 内部会处理并发请求
-	var count int
-	err := client.Db.QueryRow("SELECT COUNT(*) FROM t_accounts WHERE account = ?", account).Scan(&count)
-	return count > 0, err
+// func IsAccountExist(client mysql_client.Db_client, account string) <-chan struct {
+// 	bool
+// 	error
+// } {
+// 	// 创建结果通道
+// 	resultChan := make(chan struct {
+// 		bool
+// 		error
+// 	}, 1)
+
+// 	// 启动 goroutine 执行查询
+// 	go func() {
+// 		var count int
+// 		err := client.Db.QueryRow("SELECT COUNT(*) FROM t_accounts WHERE account = ?", account).Scan(&count)
+
+// 		// 发送结果到通道
+// 		resultChan <- struct {
+// 			bool
+// 			error
+// 		}{count > 0, err}
+
+// 		close(resultChan)
+// 	}()
+
+// 	// 立即返回通道，不阻塞
+// 	return resultChan
+// }
+
+// 回调函数方式访问异步sql操作
+func IsAccountExist(client *mysql_client.Db_client, account string, callback func(bool, error)) {
+	go func() {
+		var count int
+		err := client.Db.QueryRow("SELECT COUNT(*) FROM t_accounts WHERE account = ?", account).Scan(&count)
+		// 调用回调函数
+		callback(count > 0, err)
+	}()
 }
