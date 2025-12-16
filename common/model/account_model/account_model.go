@@ -1,13 +1,16 @@
 package account_model
 
 import (
+	"mega/common/db_config"
 	"mega/engine/logger"
 	"mega/engine/mysql_client"
+	"mega/engine/mysql_manager"
 	"time"
 )
 
 // Account 对应 t_accounts 表的结构体
 type Account struct {
+	ID            int64  `db:"id" json:"id"` // 自增主键
 	Account       string `db:"account" json:"account"`
 	Pass          string `db:"pass" json:"password"`
 	Token         string `db:"token" json:"token"`
@@ -57,7 +60,8 @@ type Account struct {
 // }
 
 // 回调函数方式访问异步sql操作
-func IsAccountExist(client *mysql_client.Db_client, account string, callback func(bool, error)) {
+func IsAccountExist(account string, callback func(bool, error)) {
+	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
 	go func() {
 		var count int
 		err := client.Db.QueryRow("SELECT COUNT(*) FROM t_accounts WHERE account = ?", account).Scan(&count)
@@ -66,9 +70,10 @@ func IsAccountExist(client *mysql_client.Db_client, account string, callback fun
 	}()
 }
 
-func InsertAccount_callback(client *mysql_client.Db_client, account *Account, callback func(int64, error)) {
+func InsertAccount_callback(account *Account, callback func(int64, error)) {
+
 	go func() {
-		id, err := InsertAccount(client, account)
+		id, err := InsertAccount(account)
 		if callback != nil {
 			callback(id, err)
 		}
@@ -76,7 +81,8 @@ func InsertAccount_callback(client *mysql_client.Db_client, account *Account, ca
 }
 
 // Insert 插入账户记录
-func InsertAccount(client *mysql_client.Db_client, account *Account) (int64, error) {
+func InsertAccount(account *Account) (int64, error) {
+	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
 	// 准备 SQL 语句
 	sqlStr := `
 	INSERT INTO t_accounts (

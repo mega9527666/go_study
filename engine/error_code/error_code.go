@@ -16,6 +16,7 @@ func (c Code) Error() string {
 
 var (
 	OK              = New(0, "success")
+	ErrAccountExist = New(0, "account exist")
 	ErrBadRequest   = New(400, "bad request")
 	ErrUnauthorized = New(401, "unauthorized")
 	ErrForbidden    = New(403, "forbidden")

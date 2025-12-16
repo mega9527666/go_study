@@ -7,7 +7,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `t_accounts`;
 CREATE TABLE `t_accounts` (
-   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `account` varchar(30) NOT NULL,
   `pass` varchar(32) NOT NULL,
   `token` varchar(255) DEFAULT NULL,
