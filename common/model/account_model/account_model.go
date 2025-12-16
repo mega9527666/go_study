@@ -1,7 +1,6 @@
 package account_model
 
 import (
-	"database/sql"
 	"mega/engine/logger"
 	"mega/engine/mysql_client"
 	"time"
@@ -67,9 +66,9 @@ func IsAccountExist(client *mysql_client.Db_client, account string, callback fun
 	}()
 }
 
-func InsertAccount_callback(db *sql.DB, account *Account, callback func(int64, error)) {
+func InsertAccount_callback(client *mysql_client.Db_client, account *Account, callback func(int64, error)) {
 	go func() {
-		id, err := InsertAccount(db, account)
+		id, err := InsertAccount(client, account)
 		if callback != nil {
 			callback(id, err)
 		}
@@ -77,7 +76,7 @@ func InsertAccount_callback(db *sql.DB, account *Account, callback func(int64, e
 }
 
 // Insert 插入账户记录
-func InsertAccount(db *sql.DB, account *Account) (int64, error) {
+func InsertAccount(client *mysql_client.Db_client, account *Account) (int64, error) {
 	// 准备 SQL 语句
 	sqlStr := `
 	INSERT INTO t_accounts (
@@ -96,7 +95,7 @@ func InsertAccount(db *sql.DB, account *Account) (int64, error) {
 	}
 
 	// 执行插入
-	result, err := db.Exec(sqlStr,
+	result, err := client.Db.Exec(sqlStr,
 		account.Account,
 		account.Pass,
 		account.Token,

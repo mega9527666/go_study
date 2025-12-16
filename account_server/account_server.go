@@ -34,11 +34,21 @@ func main() {
 	logger.Log("开始查询...")
 	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
 
+	var accountModel account_model.Account = account_model.Account{
+		Account: "abcd",
+		Pass:    "123456",
+	}
+
 	account_model.IsAccountExist(client, "abcd", func(exists bool, err error) {
 		if err != nil {
 			logger.Log("查询错误: ", err)
 		} else {
 			logger.Log("账号存在: ", exists)
+			if !exists {
+				account_model.InsertAccount_callback(client, &accountModel, func(i int64, err error) {
+					logger.Log("InsertAccount_callback======", i, err)
+				})
+			}
 		}
 	})
 	logger.Log("查询已启动，继续执行其他任务...")

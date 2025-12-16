@@ -25,6 +25,8 @@ CREATE TABLE `t_accounts` (
   `phone` varchar(30) DEFAULT NULL COMMENT '手机号码',
   `sex` int(11) DEFAULT NULL,
   `headimgurl` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`account`) USING BTREE
+   PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `idx_account` (`account`) USING BTREE,
+  KEY `idx_last_login_time` (`last_login_time`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
