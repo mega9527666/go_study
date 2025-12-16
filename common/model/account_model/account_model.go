@@ -71,7 +71,6 @@ func IsAccountExist(account string, callback func(bool, error)) {
 }
 
 func InsertAccount_callback(account *Account, callback func(int64, error)) {
-
 	go func() {
 		id, err := InsertAccount(account)
 		if callback != nil {
@@ -133,6 +132,15 @@ func InsertAccount(account *Account) (int64, error) {
 	}
 
 	return id, nil
+}
+
+func GetAccountByAccount_callback(account string, callback func(*Account, error)) {
+	go func() {
+		accountModel, err := GetAccountByAccount(account)
+		if callback != nil {
+			callback(accountModel, err)
+		}
+	}()
 }
 
 func GetAccountByAccount(account string) (*Account, error) {
