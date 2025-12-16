@@ -1,6 +1,8 @@
 package account_model
 
 import (
+	"database/sql"
+	"errors"
 	"mega/common/db_config"
 	"mega/engine/logger"
 	"mega/engine/mysql_client"
@@ -127,7 +129,8 @@ func GetAccountByAccount(account string) (*Account, error) {
               FROM t_accounts WHERE account = ?`
 
 	var acc Account
-	err := client.Db.QueryRow(query, account).Scan(
+	row := client.Db.QueryRow(query, account)
+	err := row.Scan(
 		&acc.ID,
 		&acc.Account,
 		&acc.Pass,
@@ -147,8 +150,12 @@ func GetAccountByAccount(account string) (*Account, error) {
 		&acc.Sex,
 		&acc.Headimgurl,
 	)
-
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// 账号不存在
+			return nil, nil
+		}
+		// 查询异常
 		return nil, err
 	}
 

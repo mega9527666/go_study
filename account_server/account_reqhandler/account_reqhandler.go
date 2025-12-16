@@ -67,9 +67,26 @@ func login(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string
 		return
 	}
 	logger.Log("register=====account", account)
-	// pass, ok := string_util.GetStringFromMap(dataObj, "pass")
-	// if !ok {
-	// 	http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrParam})
-	// 	return
-	// }
+	pass, ok := string_util.GetStringFromMap(dataObj, "pass")
+	if !ok {
+		http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrParam})
+		return
+	}
+
+	accountModel, err := account_model.GetAccountByAccount(account)
+	if err != nil {
+		logger.Warn("查找账号失败===", accountModel)
+		http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrInternal})
+	} else {
+		if accountModel != nil {
+			if accountModel.Pass == pass {
+
+			} else {
+				http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrPasswordWrong})
+			}
+		} else {
+			// logger.Warn("账号不存在===", accountModel, err)
+			http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrAccountNotFound})
+		}
+	}
 }
