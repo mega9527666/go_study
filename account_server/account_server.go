@@ -4,7 +4,6 @@ import (
 	"mega/account_server/account_reqhandler"
 	"mega/common/config"
 	"mega/common/db_config"
-	"mega/common/model/account_model"
 	"mega/engine/logger"
 	"os"
 	"strconv"
@@ -28,23 +27,11 @@ func main() {
 	config.ServerType = config.ServerType_List.Account_server
 	logger.Info("account_server.main", os.Args, env, port)
 
-	var accountModel account_model.Account = account_model.Account{
-		Account: "abcd",
-		Pass:    "123456",
-	}
+	// var accountModel account_model.Account = account_model.Account{
+	// 	Account: "abcd",
+	// 	Pass:    "123456",
+	// }
 
-	account_model.IsAccountExist(accountModel.Account, func(exists bool, err error) {
-		if err != nil {
-			logger.Log("查询错误: ", err)
-		} else {
-			logger.Log("账号存在: ", exists)
-			if !exists {
-				account_model.InsertAccount_callback(&accountModel, func(i int64, err error) {
-					logger.Log("InsertAccount_callback======", i, err)
-				})
-			}
-		}
-	})
 	// logger.Log("查询已启动，继续执行其他任务...")
 	// // 等待回调完成（实际项目中不需要这样）
 	// time.Sleep(1 * time.Second)

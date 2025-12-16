@@ -37,36 +37,26 @@ func register(w http.ResponseWriter, r *http.Request, ip string, dataObj map[str
 		Account: account,
 		Pass:    pass,
 	}
-	logger.Log("开始查询...")
-	account_model.IsAccountExist(accountModel.Account, func(exists bool, err error) {
-		if err != nil {
-			logger.Log("查询错误: ", err)
-			http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrInternal})
-		} else {
-			logger.Log("账号存在: ", exists)
-			if !exists {
-				account_model.InsertAccount_callback(&accountModel, func(i int64, err error) {
-					logger.Log("InsertAccount_callback======", i, err)
-					accountModel.ID = i
-					var respModel http_common.HttpResponseModel = http_common.HttpResponseModel{Code: error_code.OK}
-					respModel.Data = map[string]interface{}{
-						"account": account,
-					}
-					http_common.SendHttpResponseModel(w, respModel)
-				})
+	exists, err := account_model.IsAccountExist(account)
+	if err != nil {
+		http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrInternal})
+	} else {
+		if !exists {
+			id, err := account_model.InsertAccount(&accountModel)
+			if err != nil {
+				http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrInternal})
 			} else {
-				http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrAccountExist})
+				accountModel.ID = id
+				var respModel http_common.HttpResponseModel = http_common.HttpResponseModel{Code: error_code.OK}
+				respModel.Data = map[string]interface{}{
+					"account": account,
+				}
+				http_common.SendHttpResponseModel(w, respModel)
 			}
+		} else {
+			http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrAccountExist})
 		}
-	})
-
-	// var respModel http_common.HttpResponseModel = http_common.HttpResponseModel{Code: error_code.OK}
-	// respModel.Data = map[string]interface{}{
-	// 	"need_hotupdate": false, //需要热更新
-	// 	"force_update":   false,
-	// 	"ip":             ip,
-	// }
-	// http_common.SendHttpResponseModel(w, respModel)
+	}
 }
 
 func login(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string]interface{}) {

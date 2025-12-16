@@ -59,24 +59,11 @@ type Account struct {
 // 	return resultChan
 // }
 
-// 回调函数方式访问异步sql操作
-func IsAccountExist(account string, callback func(bool, error)) {
+func IsAccountExist(account string) (bool, error) {
 	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
-	go func() {
-		var count int
-		err := client.Db.QueryRow("SELECT COUNT(*) FROM t_accounts WHERE account = ?", account).Scan(&count)
-		// 调用回调函数
-		callback(count > 0, err)
-	}()
-}
-
-func InsertAccount_callback(account *Account, callback func(int64, error)) {
-	go func() {
-		id, err := InsertAccount(account)
-		if callback != nil {
-			callback(id, err)
-		}
-	}()
+	var count int
+	err := client.Db.QueryRow("SELECT COUNT(*) FROM t_accounts WHERE account = ?", account).Scan(&count)
+	return count > 0, err
 }
 
 // Insert 插入账户记录
@@ -132,15 +119,6 @@ func InsertAccount(account *Account) (int64, error) {
 	}
 
 	return id, nil
-}
-
-func GetAccountByAccount_callback(account string, callback func(*Account, error)) {
-	go func() {
-		accountModel, err := GetAccountByAccount(account)
-		if callback != nil {
-			callback(accountModel, err)
-		}
-	}()
 }
 
 func GetAccountByAccount(account string) (*Account, error) {
