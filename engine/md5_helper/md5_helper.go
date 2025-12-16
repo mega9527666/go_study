@@ -3,6 +3,7 @@ package md5_helper
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"mega/engine/string_util"
 )
 
 var private_key string = "jhao"
@@ -22,4 +23,8 @@ func GetMd5_encrypt(input string) string {
 	var md5_value string = GetMd5_default(needStr)
 	// logger.Log("GetMd5_encrypt====", input, private_key, needStr, md5_value)
 	return md5_value
+}
+
+func CreateToken(inputStr string) string {
+	return GetMd5_encrypt(inputStr + string_util.NowUnixMilliString())
 }

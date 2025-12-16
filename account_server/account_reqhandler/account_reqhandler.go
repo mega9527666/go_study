@@ -5,6 +5,7 @@ import (
 	"mega/engine/error_code"
 	"mega/engine/http_common"
 	"mega/engine/logger"
+	"mega/engine/md5_helper"
 	"mega/engine/string_util"
 	"net/http"
 )
@@ -80,7 +81,7 @@ func login(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string
 	} else {
 		if accountModel != nil {
 			if accountModel.Pass == pass {
-
+				var token string = md5_helper.CreateToken(account)
 			} else {
 				http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrPasswordWrong})
 			}
