@@ -70,5 +70,16 @@ func register(w http.ResponseWriter, r *http.Request, ip string, dataObj map[str
 }
 
 func login(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string]interface{}) {
-
+	logger.Log("register=", ip, dataObj)
+	account, ok := string_util.GetStringFromMap(dataObj, "account")
+	if !ok {
+		http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrParam})
+		return
+	}
+	logger.Log("register=====account", account)
+	// pass, ok := string_util.GetStringFromMap(dataObj, "pass")
+	// if !ok {
+	// 	http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrParam})
+	// 	return
+	// }
 }

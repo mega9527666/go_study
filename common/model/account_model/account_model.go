@@ -134,3 +134,37 @@ func InsertAccount(account *Account) (int64, error) {
 
 	return id, nil
 }
+
+func GetAccountByAccount(account string) (*Account, error) {
+	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
+	query := `SELECT id, account, pass,token, account_type, status, ip,nick_name,channel,os,phone_type,bundle_name,system_version,create_time,last_login_time,phone,sex,headimgurl 
+              FROM t_accounts WHERE account = ?`
+
+	var acc Account
+	err := client.Db.QueryRow(query, account).Scan(
+		&acc.ID,
+		&acc.Account,
+		&acc.Pass,
+		&acc.Token,
+		&acc.AccountType,
+		&acc.Status,
+		&acc.IP,
+		&acc.NickName,
+		&acc.Channel,
+		&acc.OS,
+		&acc.PhoneType,
+		&acc.BundleName,
+		&acc.SystemVersion,
+		&acc.CreateTime,
+		&acc.LastLoginTime,
+		&acc.Phone,
+		&acc.Sex,
+		&acc.Headimgurl,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &acc, nil
+}
