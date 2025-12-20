@@ -27,7 +27,8 @@ type Socket_Connection struct {
 	status int32 // 使用 atomic 操作
 	Ip     string
 
-	send chan []byte // ⭐ 写队列
+	send   chan []byte   // ⭐ 写队列
+	closed chan struct{} // ⭐ 关闭信号
 }
 
 // 构造函数
@@ -47,7 +48,9 @@ func NewSocketConnection(conn *websocket.Conn, ip string) *Socket_Connection {
 		conn:   conn,
 		Ip:     ip,
 		status: int32(ConnStatusOpen),
-		send:   make(chan []byte, 64), // 缓冲可调
+		//最多能放 32 个 []byte 元素，不是 32 字节，不是32KB，不是32MB， 32条消息
+		send:   make(chan []byte, 32), // 缓冲可调，一般缓存32个字节数组就够了，不会同时发32条消息以上给客户端吧
+		closed: make(chan struct{}),   // ⭐ 必须 make
 	}
 }
 
@@ -64,12 +67,6 @@ func (s *Socket_Connection) ReadMsg() {
 
 		logger.Log("收到消息: ", msgType, msg)
 
-		// // 原样返回（echo）
-		// err = conn.WriteMessage(msgType, msg)
-		// if err != nil {
-		// 	logger.Log("发送消息失败:", err)
-		// 	break
-		// }
 	}
 }
 
@@ -77,15 +74,24 @@ func (s *Socket_Connection) ReadMsg() {
 func (s *Socket_Connection) WritePump() {
 	defer s.Close()
 
-	for msg := range s.send {
-		if !s.IsOpen() {
+	// for msg := range s.send {
+	// 	err := s.conn.WriteMessage(websocket.TextMessage, msg)
+	// 	if err != nil {
+	// 		logger.Warn("写消息失败:", s.Ip, err)
+	// 		return
+	// 	}
+	// }
+	for {
+		msg, ok := <-s.send
+		if !ok {
+			// channel 被关闭了
 			return
-		}
-
-		err := s.conn.WriteMessage(websocket.TextMessage, msg)
-		if err != nil {
-			logger.Warn("写消息失败:", s.Ip, err)
-			return
+		} else {
+			err := s.conn.WriteMessage(websocket.TextMessage, msg)
+			if err != nil {
+				logger.Warn("写消息失败:", s.Ip, err)
+				return
+			}
 		}
 	}
 }
@@ -94,10 +100,12 @@ func (s *Socket_Connection) Send(msg []byte) error {
 	if !s.IsOpen() {
 		return errors.New("connection closed")
 	}
-
-	// select {
-	// case s.send <- msg:
-	// 	return nil
+	select {
+	case s.send <- msg: //如果缓冲不够就会阻塞
+		return nil
+	case <-s.closed: //从一个已关闭的 channel 读取，会立刻返回
+		return errors.New("connection closed")
+	}
 
 }
 
@@ -134,6 +142,7 @@ func (s *Socket_Connection) Close() {
 		return
 	}
 
+	close(s.closed) // ⭐ 广播：我关了,不在接受发送给客户端的消息
 	// 发送 close frame（可选）
 	_ = s.conn.WriteMessage(
 		websocket.CloseMessage,
@@ -146,7 +155,7 @@ func (s *Socket_Connection) Close() {
 	// 给客户端一点时间响应
 	//500ms 之后，在一个新的 goroutine 里执行这个函数。
 	time.AfterFunc(500*time.Millisecond, func() {
-		// ⭐ 关闭 send 通道
+		// ⭐ 关闭 send 通道,不在send消息给客户端了
 		close(s.send)
 		_ = s.conn.Close()
 		s.MarkClosed()
