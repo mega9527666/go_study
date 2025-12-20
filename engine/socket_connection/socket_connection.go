@@ -96,10 +96,15 @@ func (s *Socket_Connection) WritePump() {
 	}
 }
 
-func (s *Socket_Connection) Send(msg []byte) error {
+func (s *Socket_Connection) Send(msg []byte) (err error) {
 	if !s.IsOpen() {
 		return errors.New("connection closed")
 	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("connection closed")
+		}
+	}()
 	select {
 	case s.send <- msg: //如果缓冲不够就会阻塞
 		return nil
