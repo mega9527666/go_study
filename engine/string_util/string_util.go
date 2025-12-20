@@ -19,13 +19,13 @@ func GetStringFromMap(m map[string]interface{}, key string) (string, bool) {
 	return s, ok
 }
 
-func GetInt64FromMap(m map[string]interface{}, key string) (int64, bool) {
+func GetIntFromMap(m map[string]interface{}, key string) (int, bool) {
 	v, ok := m[key]
 	if !ok {
 		logger.Warn("GetInt64FromMap no key error", key, m)
 		return 0, false
 	}
-	s, ok := v.(int64)
+	s, ok := v.(int)
 	if !ok {
 		logger.Warn("GetInt64FromMap no int64 error", key, m)
 	}

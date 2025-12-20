@@ -30,11 +30,11 @@ func main() {
 
 	dataObj := map[string]interface{}{
 		"account": "abcd",
-		"chan":    1,
+		"chan":    66,
 	}
 
 	// result := dataObj["chan"]
-	result, ok := string_util.GetInt64FromMap(dataObj, "chan")
+	result, ok := string_util.GetIntFromMap(dataObj, "chan")
 	logger.Log("result--=", result, ok)
 	result1 := dataObj["account"]
 	logger.Log("result--account=", result1)
