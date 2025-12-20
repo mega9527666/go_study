@@ -3,7 +3,6 @@ package socket_connection
 import (
 	"errors"
 	"mega/engine/logger"
-	"mega/engine/socket_conn_mgr"
 	"sync/atomic"
 	"time"
 
@@ -164,6 +163,5 @@ func (s *Socket_Connection) Close() {
 		close(s.send)
 		_ = s.conn.Close()
 		s.MarkClosed()
-		socket_conn_mgr.SocketConnManager.RemoveSocketConnection(s)
 	})
 }
