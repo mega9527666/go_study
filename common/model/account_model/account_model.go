@@ -161,3 +161,70 @@ func GetAccountByAccount(account string) (*Account, error) {
 
 	return &acc, nil
 }
+
+// UpdateAccount 更新账户记录
+func UpdateAccount(account *Account) (int64, error) {
+	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
+
+	// 准备 SQL 语句
+	sqlStr := `
+	UPDATE t_accounts SET
+		account = ?,
+		pass = ?,
+		token = ?,
+		account_type = ?,
+		status = ?,
+		ip = ?,
+		nick_name = ?,
+		channel = ?,
+		os = ?,
+		phone_type = ?,
+		bundle_name = ?,
+		system_version = ?,
+		last_login_time = ?,
+		phone = ?,
+		sex = ?,
+		headimgurl = ?
+		WHERE id = ?
+	`
+
+	// 如果没有传 last_login_time，就默认当前时间
+	if account.LastLoginTime == 0 {
+		account.LastLoginTime = time.Now().UnixMilli()
+	}
+
+	// 执行更新
+	result, err := client.Db.Exec(sqlStr,
+		account.Account,
+		account.Pass,
+		account.Token,
+		account.AccountType,
+		account.Status,
+		account.IP,
+		account.NickName,
+		account.Channel,
+		account.OS,
+		account.PhoneType,
+		account.BundleName,
+		account.SystemVersion,
+		account.LastLoginTime,
+		account.Phone,
+		account.Sex,
+		account.Headimgurl,
+		account.ID, // WHERE id = ?
+	)
+
+	if err != nil {
+		logger.Warn("更新账户失败 =", err)
+		return 0, err
+	}
+
+	// 返回受影响的行数
+	rows, err := result.RowsAffected()
+	if err != nil {
+		logger.Warn("获取更新行数失败 =", err)
+		return 0, err
+	}
+	logger.Warn("获取更新行数 =", rows, result)
+	return rows, nil
+}

@@ -82,6 +82,18 @@ func login(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string
 		if accountModel != nil {
 			if accountModel.Pass == pass {
 				var token string = md5_helper.CreateToken(account)
+				accountModel.NickName = accountModel.Account
+				accountModel.Token = token
+				rows, err := account_model.UpdateAccount(accountModel)
+				if err != nil {
+					if rows >= 1 {
+
+					} else {
+						http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrInternal})
+					}
+				} else {
+					http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrInternal})
+				}
 			} else {
 				http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrPasswordWrong})
 			}

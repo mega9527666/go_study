@@ -38,13 +38,19 @@ func main() {
 	logger.Log("result--=", result, ok)
 	result1 := dataObj["account"]
 	logger.Log("result--account=", result1)
-	// accountModel, err := account_model.GetAccountByAccount("ab1d")
+	// accountModel, err := account_model.GetAccountByAccount("abcd")
 	// if err != nil {
 	// 	logger.Warn("查找账号失败===", accountModel)
 	// } else {
 	// 	if accountModel != nil {
-	// 		if accountModel.Pass == "12123165" {
+	// 		if accountModel.Pass == "123456" {
 	// 			logger.Warn("密码相同===", accountModel)
+	// 			var token string = md5_helper.CreateToken(accountModel.Account)
+	// 			accountModel.NickName = accountModel.Account
+	// 			accountModel.Token = token
+	// 			rows, err := account_model.UpdateAccount(accountModel)
+	// 			if err != nil {
+	// 			}
 	// 		} else {
 	// 			logger.Warn("密码不同===", accountModel)
 	// 			// http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrPasswordWrong})
