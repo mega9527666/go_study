@@ -83,6 +83,7 @@ func (s *Socket_Connection) Close() {
 
 	// _ = s.conn.Close()
 	// s.MarkClosed()
+
 	// 给客户端一点时间响应
 	//500ms 之后，在一个新的 goroutine 里执行这个函数。
 	time.AfterFunc(500*time.Millisecond, func() {
