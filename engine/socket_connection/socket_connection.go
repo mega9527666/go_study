@@ -1,6 +1,9 @@
 package socket_connection
 
 import (
+	"errors"
+	"mega/engine/logger"
+	"mega/engine/socket_conn_mgr"
 	"sync/atomic"
 	"time"
 
@@ -22,10 +25,13 @@ type Socket_Connection struct {
 	Id     int64
 	conn   *websocket.Conn
 	status int32 // 使用 atomic 操作
+	Ip     string
+
+	send chan []byte // ⭐ 写队列
 }
 
 // 构造函数
-func NewSocketConnection(conn *websocket.Conn) *Socket_Connection {
+func NewSocketConnection(conn *websocket.Conn, ip string) *Socket_Connection {
 	//每来一个连接，ID 自动 +1，绝对不重复
 	// 为什么不用普通的 id++？（重点）
 	// 	WebSocket 是并发的：
@@ -37,9 +43,62 @@ func NewSocketConnection(conn *websocket.Conn) *Socket_Connection {
 	// 数据错乱
 	id := atomic.AddInt64(&globalConnID, 1)
 	return &Socket_Connection{
-		Id:   id,
-		conn: conn,
+		Id:     id,
+		conn:   conn,
+		Ip:     ip,
+		status: int32(ConnStatusOpen),
+		send:   make(chan []byte, 64), // 缓冲可调
 	}
+}
+
+func (s *Socket_Connection) ReadMsg() {
+	defer s.Close() // ⭐关键
+	for {
+		// 读取消息
+		msgType, msg, err := s.conn.ReadMessage()
+		if err != nil {
+			logger.Warn("读取消息失败:", s.Ip, err)
+			// break
+			return
+		}
+
+		logger.Log("收到消息: ", msgType, msg)
+
+		// // 原样返回（echo）
+		// err = conn.WriteMessage(msgType, msg)
+		// if err != nil {
+		// 	logger.Log("发送消息失败:", err)
+		// 	break
+		// }
+	}
+}
+
+// 启动写协程（Write Pump）写只能在同一个线程不然有问题的
+func (s *Socket_Connection) WritePump() {
+	defer s.Close()
+
+	for msg := range s.send {
+		if !s.IsOpen() {
+			return
+		}
+
+		err := s.conn.WriteMessage(websocket.TextMessage, msg)
+		if err != nil {
+			logger.Warn("写消息失败:", s.Ip, err)
+			return
+		}
+	}
+}
+
+func (s *Socket_Connection) Send(msg []byte) error {
+	if !s.IsOpen() {
+		return errors.New("connection closed")
+	}
+
+	// select {
+	// case s.send <- msg:
+	// 	return nil
+
 }
 
 // 获取状态
@@ -87,7 +146,10 @@ func (s *Socket_Connection) Close() {
 	// 给客户端一点时间响应
 	//500ms 之后，在一个新的 goroutine 里执行这个函数。
 	time.AfterFunc(500*time.Millisecond, func() {
+		// ⭐ 关闭 send 通道
+		close(s.send)
 		_ = s.conn.Close()
 		s.MarkClosed()
+		socket_conn_mgr.SocketConnManager.RemoveSocketConnection(s)
 	})
 }

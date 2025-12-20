@@ -1,8 +1,10 @@
 package socket_common
 
 import (
-	"log"
+	"mega/engine/http_common"
 	"mega/engine/logger"
+	"mega/engine/socket_conn_mgr"
+	"mega/engine/socket_connection"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -17,29 +19,14 @@ var upgrader = websocket.Upgrader{
 func WsHandler(w http.ResponseWriter, r *http.Request) {
 	// 升级 HTTP -> WebSocket
 	conn, err := upgrader.Upgrade(w, r, nil)
+	var ip string = http_common.GetClientIP(r)
 	if err != nil {
-		log.Println("升级失败:", err)
+		logger.Warn("升级失败:", err, ip)
 		return
 	}
-	// defer conn.Close()
-
-	logger.Log("客户端连接成功")
-
-	for {
-		// 读取消息
-		msgType, msg, err := conn.ReadMessage()
-		if err != nil {
-			logger.Log("读取消息失败:", err)
-			break
-		}
-
-		logger.Log("收到消息: ", msgType, msg)
-
-		// // 原样返回（echo）
-		// err = conn.WriteMessage(msgType, msg)
-		// if err != nil {
-		// 	logger.Log("发送消息失败:", err)
-		// 	break
-		// }
-	}
+	var socketConn *socket_connection.Socket_Connection = socket_connection.NewSocketConnection(conn, ip)
+	socket_conn_mgr.SocketConnManager.AddSocketConnection(socketConn)
+	logger.Log("客户端连接成功", ip)
+	go socketConn.ReadMsg()
+	go socketConn.WritePump()
 }
