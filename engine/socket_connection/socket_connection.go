@@ -9,7 +9,7 @@ import (
 var globalConnID int64 = 0
 
 type Socket_Connection struct {
-	id   int64
+	Id   int64
 	conn *websocket.Conn
 }
 
