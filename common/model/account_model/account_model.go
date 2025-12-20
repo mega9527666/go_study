@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"mega/common/db_config"
+	"mega/engine/dateutil"
 	"mega/engine/logger"
 	"mega/engine/mysql_client"
 	"mega/engine/mysql_manager"
@@ -82,10 +83,10 @@ func InsertAccount(account *Account) (int64, error) {
 
 	// 设置时间戳（如果未设置）
 	if account.CreateTime == 0 {
-		account.CreateTime = time.Now().UnixMilli()
+		account.CreateTime = dateutil.Now_UnixMilli()
 	}
 	if account.LastLoginTime == 0 {
-		account.LastLoginTime = time.Now().UnixMilli()
+		account.LastLoginTime = dateutil.Now_UnixMilli()
 	}
 
 	// 执行插入

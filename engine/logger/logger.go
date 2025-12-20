@@ -23,7 +23,7 @@ func init() {
 }
 
 func getLogPreKey(nowLevel int) string {
-	var str string = "[" + dateutil.FormatNow() + "] " + TAG + " [" + Log_Level_Names[nowLevel] + "] "
+	var str string = "[" + dateutil.FormatLogNow() + "] " + TAG + " [" + Log_Level_Names[nowLevel] + "] "
 	return str
 }
 

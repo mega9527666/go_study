@@ -2,6 +2,7 @@ package account_reqhandler
 
 import (
 	"mega/common/model/account_model"
+	"mega/engine/dateutil"
 	"mega/engine/error_code"
 	"mega/engine/http_common"
 	"mega/engine/logger"
@@ -84,10 +85,15 @@ func login(w http.ResponseWriter, r *http.Request, ip string, dataObj map[string
 				var token string = md5_helper.CreateToken(account)
 				accountModel.NickName = accountModel.Account
 				accountModel.Token = token
+				accountModel.LastLoginTime = dateutil.Now_UnixMilli()
 				rows, err := account_model.UpdateAccount(accountModel)
 				if err != nil {
 					if rows >= 1 {
-
+						var respModel http_common.HttpResponseModel = http_common.HttpResponseModel{Code: error_code.OK}
+						respModel.Data = map[string]interface{}{
+							"account": account,
+						}
+						http_common.SendHttpResponseModel(w, respModel)
 					} else {
 						http_common.SendHttpResponseModel(w, http_common.HttpResponseModel{Code: error_code.ErrInternal})
 					}
