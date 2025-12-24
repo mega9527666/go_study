@@ -1,4 +1,4 @@
-package hallserver
+package main
 
 import (
 	"mega/common/config"
@@ -28,8 +28,10 @@ func main() {
 	logger.Info("Hall_server.main", os.Args, env, port)
 
 	// http.HandleFunc("/ws", wsHandler)
-	http.HandleFunc("/ws", socket_common.WsHandler)
+	// http.HandleFunc("/ws", socket_common.WsHandler)
+	http.HandleFunc("/", socket_common.WsHandler)
 	// log.Println("WebSocket 服务启动: ws://localhost:8080/ws")
+	logger.Log("WebSocket 服务启动: ws://127.0.0.1:" + strconv.Itoa(port))
 	http.ListenAndServe(":"+strconv.Itoa(port), nil)
 
 }
