@@ -64,7 +64,15 @@ func (s *Socket_Connection) ReadMsg() {
 			return
 		}
 
-		logger.Log("收到消息: ", msgType, msg)
+		switch msgType {
+		case websocket.TextMessage:
+			str := string(msg)
+			logger.Log("收到消息 string: ", s.Id, s.Ip, msgType, str)
+		case websocket.BinaryMessage:
+			logger.Log("收到消息 BinaryMessage: ", s.Id, s.Ip, msgType, msg)
+		default:
+			logger.Log("收到未知消息类型: ", s.Id, s.Ip, msgType)
+		}
 
 	}
 }
