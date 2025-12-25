@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package jhaoproto;
+
+// 这一行是关键 ⭐⭐⭐
+option go_package = "go/jhaoproto";
+
+/**
+传输到服务器的公共数据
+cmd_order = 命令序列号
+cmd_index = 命令编号
+time_upload = 上行时间戳(毫秒)
+time_download = 下行时间戳(毫秒)
+data = 业务逻辑data
+*/
+message BaseMsg {
+    int32 cmdOrder = 1;
+    int32 cmdIndex = 2;
+    int64 timeUpload = 3;
+    int64 timeDownload = 4;
+    ErrorCodeWs errorCode = 5;
+    string errorMsg = 6;
+    bytes data=7;
+}
+
+enum ErrorCodeWs {
+    Suc= 0; //正确
+    Fail=1; //错误
+    Db_Error= 2;//数据库错误
+    RegisterError_HadUser= 3; //注册失败已存在改用户
+    Error_Param=4;//参数错误
+    LoginError_NoUser=5;//登录不存在改用户
+    LoginError_NoPass=6; //登录密码错误
+    LoginError_Forbid=7; //禁止登录
+    LoginError_MultiLogin=8; //异地登录
+    LoginError_NoLogin=9; //没登录就发命令
+    LoginError_token=10; //token错误
+    Feng_jin=11;// 封禁
+    No_user_data=12; //没用户数据
+    Server_Weihu=13; //服务器维护
+}
+
+enum CmdIndex {
+    /**预设*/
+    None = 0;
+    /**心跳 */
+    Ping = 1;
+    Login=2;  //登录    ReqLogin RespLogin
+
+    /**亲友圈*/
+    club_list=1000; //俱乐部列表   req_club_list resp_club_list
+    club_create=1001; //俱乐部创建 req_club_create resp_club_create
+    club_join=1002;    //req_club_join   resp_club_join
+    club_apply_list=1003; //req_club_apply_list resp_club_apply_list
+    club_apply_handle=1004;//req_club_apply_handle resp_club_apply_handle
+    club_exit=1005; //req_club_exit resp_club_exit
+    club_member_list=1006;//req_club_member_list resp_club_member_list
+    club_delete_member=1007; //req_club_delete_member resp_club_delete_member
+    club_member_actor=1008; //req_club_member_actor resp_club_member_actor
+    club_score=1009; //req_club_score resp_club_score
+    club_create_room_template=1010; //req_club_create_room_template resp_club_create_room_template
+    club_delete_room_template=1011;
+    club_room=1012; //req_club_room resp_club_room
+
+
+    /**大厅*/
+    // 创建房间
+    create_room=2000;//
+
+
+    /**服务器内部*/
+    // 
+    server_internal_None=9000000;
+    // 服务器内部登录
+    server_internal_Login=9000001;
+    server_internal_kill_all_users=9000002;
+    server_internal_set_server_status=9000003;
+    server_internal_get_server_status=9000004;
+    server_internal_update_online=9000005;
+    server_internal_is_in_server=9000006;
+    server_internal_is_user_online=9000007;
+    server_internal_club_create_room_template=9000008; //
+    server_internal_club_delete_room_template=9000009; //
+    server_internal_createRoom=9000010; //
+
+
+}
+
+message ReqPing{
+    string version=1; //版本号
+}
+
+message RespPing {
+    int64 t=1; //时间戳	
+	bool n=2; //是否需要热更新
+}
+
+
+
+//登录
+message ReqLogin {
+	string account=1;      //账号
+	string token=2;         //
+	string nickname=3; //呢称
+	int32 sex=4;	//性别
+	string headimgurl=5; //头像
+}
+
+message RespLogin {
+    UserInfo userInfo = 1;
+}
+
+message UserInfo {
+    /**服务器userid*/
+    int64 userId = 1;
+    /**user name*/
+    string userName = 2;
+    /**user photo*/
+    string userPhoto = 3;
+    int32 sex = 4;
+    int64 coins = 5;  //金币
+    int64 diamond = 6;  //钻石
+    int32 room_id=7; //房间Id
+}
