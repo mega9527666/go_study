@@ -26,12 +26,15 @@ type Socket_Connection struct {
 	status int32 // 使用 atomic 操作
 	Ip     string
 
-	send   chan []byte   // ⭐ 写队列
-	closed chan struct{} // ⭐ 关闭信号
+	send             chan []byte   // ⭐ 写队列
+	closed           chan struct{} // ⭐ 关闭信号
+	onMessageHandler MsgHandler
 }
 
+type MsgHandler func(s *Socket_Connection, msgType int, data []byte)
+
 // 构造函数
-func NewSocketConnection(conn *websocket.Conn, ip string) *Socket_Connection {
+func NewSocketConnection(conn *websocket.Conn, ip string, onMessageHandler MsgHandler) *Socket_Connection {
 	//每来一个连接，ID 自动 +1，绝对不重复
 	// 为什么不用普通的 id++？（重点）
 	// 	WebSocket 是并发的：
@@ -68,8 +71,8 @@ func (s *Socket_Connection) ReadMsg() {
 		case websocket.TextMessage:
 			str := string(msg)
 			logger.Log("收到消息 string: ", s.Id, s.Ip, msgType, str)
-			b := []byte(str)
-			s.Send(b)
+			// b := []byte(str)
+			// s.Send(b)
 		case websocket.BinaryMessage:
 			logger.Log("收到消息 BinaryMessage: ", s.Id, s.Ip, msgType, msg)
 		case websocket.CloseMessage: //websocket.CloseMessage 基本收不到（重要⚠️）大多数情况下： [warn] 读取消息失败: 127.0.0.1 websocket: close 1001 (going away)

@@ -16,7 +16,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func WsHandler(w http.ResponseWriter, r *http.Request) {
+func WsHandler(w http.ResponseWriter, r *http.Request, onMessageHandler socket_connection.MsgHandler) {
 	// 升级 HTTP -> WebSocket
 	conn, err := upgrader.Upgrade(w, r, nil)
 	var ip string = http_common.GetClientIP(r)
@@ -24,7 +24,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 		logger.Warn("升级失败:", err, ip)
 		return
 	}
-	var socketConn *socket_connection.Socket_Connection = socket_connection.NewSocketConnection(conn, ip)
+	var socketConn *socket_connection.Socket_Connection = socket_connection.NewSocketConnection(conn, ip, onMessageHandler)
 	socket_conn_mgr.SocketConnManager.AddSocketConnection(socketConn)
 	logger.Log("客户端连接成功", ip)
 	go socketConn.ReadMsg()
