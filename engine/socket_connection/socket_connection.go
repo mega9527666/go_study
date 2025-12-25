@@ -73,6 +73,8 @@ func (s *Socket_Connection) ReadMsg() {
 			logger.Log("收到消息 string: ", s.Id, s.Ip, msgType, str)
 			// b := []byte(str)
 			// s.Send(b)
+			s.onMessageHandler(s, msgType, msg)
+
 		case websocket.BinaryMessage:
 			logger.Log("收到消息 BinaryMessage: ", s.Id, s.Ip, msgType, msg)
 		case websocket.CloseMessage: //websocket.CloseMessage 基本收不到（重要⚠️）大多数情况下： [warn] 读取消息失败: 127.0.0.1 websocket: close 1001 (going away)

@@ -43,5 +43,6 @@ func main() {
 func onMessageHandler(s *socket_connection.Socket_Connection,
 	msgType int,
 	data []byte) {
+	logger.Log("onMessageHandler=====", msgType, string(data))
 	hall_socket_msg_mgr.Login_resp(s)
 }
