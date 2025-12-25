@@ -14,8 +14,8 @@ func Login_resp(s *socket_connection.Socket_Connection) {
 	str := "{'acount':'abcd', 'scrore':1}"
 
 	sendData := &jhaoproto.BaseMsg{
-		CmdOrder:   1,
-		CmdIndex:   int32(jhaoproto.CmdIndex_Ping),
+		CmdOrder:   9527,
+		CmdIndex:   int32(jhaoproto.CmdIndex_Login),
 		TimeUpload: dateutil.Now_UnixMicro(),
 		Data:       []byte(str),
 	}

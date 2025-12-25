@@ -51,8 +51,9 @@ func NewSocketConnection(conn *websocket.Conn, ip string, onMessageHandler MsgHa
 		Ip:     ip,
 		status: int32(ConnStatusOpen),
 		//最多能放 32 个 []byte 元素，不是 32 字节，不是32KB，不是32MB， 32条消息
-		send:   make(chan []byte, 32), // 缓冲可调，一般缓存32个字节数组就够了，不会同时发32条消息以上给客户端吧
-		closed: make(chan struct{}),   // ⭐ 必须 make
+		send:             make(chan []byte, 32), // 缓冲可调，一般缓存32个字节数组就够了，不会同时发32条消息以上给客户端吧
+		closed:           make(chan struct{}),   // ⭐ 必须 make
+		onMessageHandler: onMessageHandler,
 	}
 }
 
@@ -103,7 +104,8 @@ func (s *Socket_Connection) WritePump() {
 			// channel 被关闭了
 			return
 		} else {
-			err := s.conn.WriteMessage(websocket.TextMessage, msg)
+			// err := s.conn.WriteMessage(websocket.TextMessage, msg)
+			err := s.conn.WriteMessage(websocket.BinaryMessage, msg)
 			if err != nil {
 				logger.Warn("写消息失败:", s.Ip, err)
 				return
