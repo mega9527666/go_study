@@ -11,13 +11,24 @@ import (
 
 func Login_resp(s *socket_connection.Socket_Connection) {
 
-	str := "{'acount':'abcd', 'scrore':1}"
+	// str := "{'acount':'abcd', 'scrore':1}"
+
+	loginData := &jhaoproto.RespLogin{
+		UserInfo: &jhaoproto.UserInfo{
+			UserId:    9527,
+			UserName:  "abcd",
+			UserPhoto: "http://aweilrjer",
+			Sex:       1,
+		},
+	}
+
+	loginByte, err := proto.Marshal(loginData)
 
 	sendData := &jhaoproto.BaseMsg{
 		CmdOrder:   9527,
 		CmdIndex:   int32(jhaoproto.CmdIndex_Login),
 		TimeUpload: dateutil.Now_UnixMicro(),
-		Data:       []byte(str),
+		Data:       loginByte,
 	}
 
 	data, err := proto.Marshal(sendData)
