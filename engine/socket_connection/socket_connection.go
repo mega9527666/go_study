@@ -17,6 +17,9 @@ const (
 	ConnStatusClosing
 	ConnStatusClosed
 )
+const (
+	readWait = 30 * time.Second
+)
 
 var globalConnID int64 = 0
 
@@ -59,6 +62,9 @@ func NewSocketConnection(conn *websocket.Conn, ip string, onMessageHandler MsgHa
 
 func (s *Socket_Connection) ReadMsg() {
 	defer s.Close() // ⭐关键
+	// ⭐ 设置初始超时
+	_ = s.conn.SetReadDeadline(time.Now().Add(readWait))
+
 	for {
 		// 读取消息
 		msgType, msg, err := s.conn.ReadMessage()
@@ -70,6 +76,7 @@ func (s *Socket_Connection) ReadMsg() {
 
 		switch msgType {
 		case websocket.TextMessage:
+			_ = s.conn.SetReadDeadline(time.Now().Add(readWait))
 			str := string(msg)
 			logger.Log("收到消息 string: ", s.Id, s.Ip, msgType, str)
 			// b := []byte(str)
@@ -77,6 +84,7 @@ func (s *Socket_Connection) ReadMsg() {
 			s.onMessageHandler(s, msgType, msg)
 
 		case websocket.BinaryMessage:
+			_ = s.conn.SetReadDeadline(time.Now().Add(readWait))
 			logger.Log("收到消息 BinaryMessage: ", s.Id, s.Ip, msgType, msg)
 		case websocket.CloseMessage: //websocket.CloseMessage 基本收不到（重要⚠️）大多数情况下： [warn] 读取消息失败: 127.0.0.1 websocket: close 1001 (going away)
 			logger.Log("收到消息 CloseMessage: ", s.Id, s.Ip, msgType)
