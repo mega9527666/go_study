@@ -1,28 +1,35 @@
 package random_util
 
 import (
-	"math/rand"
+	// "math/rand"
+	"math/rand/v2"
 	"time"
 )
 
 // RandomUtil 可控随机工具
 type RandomUtil struct {
-	Seed int64
+	Seed uint64
 	r    *rand.Rand
 }
 
 // NewRandomUtil 创建随机工具
 // seed == 0 时使用当前时间
 func NewRandomUtil(seed int64) *RandomUtil {
+	var s uint64
 	if seed == 0 {
-		seed = time.Now().UnixNano()
+		s = uint64(time.Now().UnixNano())
+	} else {
+		s = uint64(seed)
 	}
+
+	// PCG 需要两个参数（state, stream）
+	src := rand.NewPCG(s, s^0x9e3779b97f4a7c15)
+
 	return &RandomUtil{
-		Seed: seed,
-		r:    rand.New(rand.NewSource(seed)),
+		Seed: s,
+		r:    rand.New(src),
 	}
 }
-
 func NewRandomUtilAuto() *RandomUtil {
 	return NewRandomUtil(0)
 }
@@ -32,7 +39,7 @@ func (ru *RandomUtil) NextInt(min, max int) int {
 	if min > max {
 		min, max = max, min
 	}
-	return ru.r.Intn(max-min+1) + min
+	return ru.r.IntN(max-min+1) + min
 }
 
 // NextNumber [min, max)
@@ -45,7 +52,7 @@ func (ru *RandomUtil) NextNumber(min, max float64) float64 {
 
 // NextBoolean 随机 true / false
 func (ru *RandomUtil) NextBoolean() bool {
-	return ru.r.Intn(2) == 1
+	return ru.r.IntN(2) == 1
 }
 
 // RandomArr 从数组中随机取 needNum 个（不重复）

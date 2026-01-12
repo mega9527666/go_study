@@ -18,7 +18,7 @@ const (
 	ConnStatusClosed
 )
 const (
-	readWait = 60 * time.Second //60s收不到客户端消息就close，傻逼链接
+	readWait = 40 * time.Second //40s收不到客户端消息就close，傻逼链接
 )
 
 var globalConnID int64 = 0
