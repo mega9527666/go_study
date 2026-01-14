@@ -19,7 +19,7 @@ func FormatLogNow() string {
 // 按要求格式化时间戳
 func FormatTime(timestamp int64) string {
 	// 第二个参数是纳秒，通常为0
-	var tempTime = time.Unix(timestamp, 0)
+	var tempTime = time.UnixMilli(timestamp)
 	var formatTime = tempTime.Format("2006-01-02 15:04:05")
 	return formatTime
 }
@@ -27,7 +27,7 @@ func FormatTime(timestamp int64) string {
 // 按要求格式化时间戳
 func FormatTime_2(timestamp int64) string {
 	// 第二个参数是纳秒，通常为0
-	var tempTime = time.Unix(timestamp, 0)
+	var tempTime = time.UnixMilli(timestamp)
 	var formatTime = tempTime.Format("2006-01-02 15:04:05.000")
 	return formatTime
 }
