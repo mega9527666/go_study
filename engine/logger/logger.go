@@ -13,7 +13,7 @@ const (
 	LOG_LEVEL_ERROR
 )
 
-const TAG = "[MegaLog]"
+const TAG = "[JhaoLog]"
 
 var Log_Level_Names = [5]string{"debug", "log", "info", "warn", "error"}
 var LOG_LEVEL = LOG_LEVEL_DEBUG
@@ -32,8 +32,7 @@ func Debug(a ...any) {
 		return
 	}
 	var str string = getLogPreKey(LOG_LEVEL_DEBUG)
-	fmt.Print(str)
-	fmt.Println(a...)
+	fmt.Println(append([]any{str}, a...)...)
 }
 
 func Log(a ...any) {
@@ -41,8 +40,7 @@ func Log(a ...any) {
 		return
 	}
 	var str string = getLogPreKey(LOG_LEVEL_LOG)
-	fmt.Print(str)
-	fmt.Println(a...)
+	fmt.Println(append([]any{str}, a...)...)
 }
 
 func Info(a ...any) {
@@ -50,8 +48,7 @@ func Info(a ...any) {
 		return
 	}
 	var str string = getLogPreKey(LOG_LEVEL_INFO)
-	fmt.Print(str)
-	fmt.Println(a...)
+	fmt.Println(append([]any{str}, a...)...)
 }
 
 func Warn(a ...any) {
@@ -59,8 +56,7 @@ func Warn(a ...any) {
 		return
 	}
 	var str string = getLogPreKey(LOG_LEVEL_WARN)
-	fmt.Print(str)
-	fmt.Println(a...)
+	fmt.Println(append([]any{str}, a...)...)
 }
 
 func Error(a ...any) {
@@ -68,6 +64,5 @@ func Error(a ...any) {
 		return
 	}
 	var str string = getLogPreKey(LOG_LEVEL_ERROR)
-	fmt.Print(str)
-	fmt.Println(a...)
+	fmt.Println(append([]any{str}, a...)...)
 }
