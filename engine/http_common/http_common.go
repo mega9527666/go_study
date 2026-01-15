@@ -110,61 +110,74 @@ func Dispatcher(next HttpCustomHandleFunc) HttpHandleFunc {
 
 		var contentType string = r.Header.Get("content-type")
 		if len(contentType) == 0 {
-			r.Header.Set("content-type", "application/json")
+			contentType = "application/json"
+			r.Header.Set("content-type", contentType)
 		}
-		logger.Log("dispatcher=param=Content-Type", r.Header.Get("content-type"))
-		commonHandler(w, r, next)
+		logger.Log("dispatcher=param=Content-Type", contentType)
+		commonHandler(w, r, next, contentType)
 	}
 }
 
-func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandleFunc) {
+func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandleFunc, contentType string) {
 	var ip string = GetClientIP(r)
 	// logger.Log("通用分发函数：请求到来，执行前处理...", ip)
 	// r.Body
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "commonHandler read body error", http.StatusBadRequest)
+		http.Error(w, "read body error", http.StatusBadRequest)
 		return
 	}
 	// logger.Log("通用分发函数：body", body)
 	// logger.Log("通用分发函数：body2", string(body))
-
-	datas, err := url.ParseQuery(string(body))
-	if err != nil {
-		logger.Error("commonHandler error=", err)
+	if contentType != "application/x-www-form-urlencoded" {
+		logger.Error("commonHandler  不支持的contentType=", ip, contentType)
 		SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrParam})
-		return
-	}
-	logger.Log("commonHandler datas type", datas)
-	dataStr := datas["data"][0]
-	k := datas["k"][0]
-
-	var dataObj map[string]interface{}
-	if err := json.Unmarshal([]byte(dataStr), &dataObj); err != nil {
-		logger.Error("commonHandler error=", err)
-		SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrParam})
-		return
-	}
-
-	// fmt.Printf("data type-%T\n", datas["data"])
-	// fmt.Printf("data j type %T\n", datas["k"])
-	// logger.Log("commonHandler datas", datas)
-	// logger.Log("commonHandler dataStr", dataStr)
-	// logger.Log("commonHandler k", k)
-	// logger.Log("commonHandler dataObj", dataObj)
-	// logger.Log("commonHandler channel", dataObj["channel"])
-	// logger.Log("commonHandler t", dataObj["t"])
-	// logger.Log("commonHandler v", dataObj["v"])
-	// var dataK string = md5_helper.GetMd5_encrypt(dataStr)
-	// var dataK string = md5_helper.GetMd5_default(dataStr)
-	var dataK_encry string = md5_helper.GetMd5_encrypt(dataStr)
-	// logger.Log("commonHandler checkKey=", dataK, k == dataK)
-	// logger.Log("commonHandler dataK_encry=", dataK_encry, k == dataK_encry)
-	if k == dataK_encry {
-		next(w, r, ip, dataObj)
 	} else {
-		SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrBadMd5})
+		datas, err := url.ParseQuery(string(body))
+		if err != nil {
+			logger.Error("commonHandler ParseQuery error=", ip, err)
+			SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrParam})
+			return
+		}
+		logger.Log("commonHandler datas type", datas)
+		// if len(datas) == 0 {
+		// 	// 没有任何参数
+		// 	SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrParam})
+		// }
+
+		vals, ok := datas["data"]
+		if !ok {
+			logger.Error("commonHandler  data 不存在 或 没有值=", ip, vals, ok)
+			SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrParam})
+			return
+		}
+		ks, ok := datas["k"]
+		if !ok {
+			// k 不存在 或 没有值
+			logger.Error("commonHandler  k 不存在 或 没有值=", ip, ks, ok)
+			SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrParam})
+			return
+		}
+
+		dataStr := datas["data"][0]
+		k := datas["k"][0]
+
+		var dataObj map[string]interface{}
+		if err := json.Unmarshal([]byte(dataStr), &dataObj); err != nil {
+			logger.Error("commonHandler Unmarshal error=", ip, err)
+			SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrParam})
+			return
+		}
+		var dataK_encry string = md5_helper.GetMd5_encrypt(dataStr)
+		// logger.Log("commonHandler checkKey=", dataK, k == dataK)
+		// logger.Log("commonHandler dataK_encry=", dataK_encry, k == dataK_encry)
+		if k == dataK_encry {
+			next(w, r, ip, dataObj)
+		} else {
+			SendHttpResponseModel(w, HttpResponseModel{Code: error_code.ErrBadMd5})
+		}
 	}
+
 }
 
 func SendHttpResponseModel(w http.ResponseWriter, responseModel HttpResponseModel) {
