@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	port, err := strconv.Atoi(os.Args[1])
+	http_port, err := strconv.Atoi(os.Args[1])
 	if err != nil {
 		logger.Error("初始化端口失败:", os.Args, err)
 		return
@@ -21,8 +21,12 @@ func main() {
 		return
 	}
 
-	config.Environment = env
-	logger.Info("webserver.main", os.Args, env, port)
-	webreqhandler.ListenAndServe(port)
+	config.Env = env
+	config.ServerType = config.ServerType_List.Web_server
+	//读取yaml配置文件
+	config.InitConfig(http_port)
+
+	logger.Info("webserver.main", os.Args, env, http_port)
+	webreqhandler.ListenAndServe(http_port)
 
 }

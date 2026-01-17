@@ -2,17 +2,16 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.2
-// source: proto/msg.proto
+// source: proto_client/msg.proto
 
 package jhaoproto
 
 import (
-	"reflect"
-	"sync"
-	"unsafe"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -88,11 +87,11 @@ func (x ErrorCodeWs) String() string {
 }
 
 func (ErrorCodeWs) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_msg_proto_enumTypes[0].Descriptor()
+	return file_proto_client_msg_proto_enumTypes[0].Descriptor()
 }
 
 func (ErrorCodeWs) Type() protoreflect.EnumType {
-	return &file_proto_msg_proto_enumTypes[0]
+	return &file_proto_client_msg_proto_enumTypes[0]
 }
 
 func (x ErrorCodeWs) Number() protoreflect.EnumNumber {
@@ -101,7 +100,7 @@ func (x ErrorCodeWs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ErrorCodeWs.Descriptor instead.
 func (ErrorCodeWs) EnumDescriptor() ([]byte, []int) {
-	return file_proto_msg_proto_rawDescGZIP(), []int{0}
+	return file_proto_client_msg_proto_rawDescGZIP(), []int{0}
 }
 
 type CmdIndex int32
@@ -127,7 +126,7 @@ const (
 	CmdIndex_club_delete_room_template CmdIndex = 1011
 	CmdIndex_club_room                 CmdIndex = 1012 //req_club_room resp_club_room
 	// 创建房间
-	CmdIndex_create_room          CmdIndex = 2000 //
+	CmdIndex_create_room CmdIndex = 2000 //
 	CmdIndex_server_internal_None CmdIndex = 9000000
 	// 服务器内部登录
 	CmdIndex_server_internal_Login                     CmdIndex = 9000001
@@ -217,11 +216,11 @@ func (x CmdIndex) String() string {
 }
 
 func (CmdIndex) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_msg_proto_enumTypes[1].Descriptor()
+	return file_proto_client_msg_proto_enumTypes[1].Descriptor()
 }
 
 func (CmdIndex) Type() protoreflect.EnumType {
-	return &file_proto_msg_proto_enumTypes[1]
+	return &file_proto_client_msg_proto_enumTypes[1]
 }
 
 func (x CmdIndex) Number() protoreflect.EnumNumber {
@@ -230,7 +229,7 @@ func (x CmdIndex) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CmdIndex.Descriptor instead.
 func (CmdIndex) EnumDescriptor() ([]byte, []int) {
-	return file_proto_msg_proto_rawDescGZIP(), []int{1}
+	return file_proto_client_msg_proto_rawDescGZIP(), []int{1}
 }
 
 // *
@@ -255,7 +254,7 @@ type BaseMsg struct {
 
 func (x *BaseMsg) Reset() {
 	*x = BaseMsg{}
-	mi := &file_proto_msg_proto_msgTypes[0]
+	mi := &file_proto_client_msg_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -267,7 +266,7 @@ func (x *BaseMsg) String() string {
 func (*BaseMsg) ProtoMessage() {}
 
 func (x *BaseMsg) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_msg_proto_msgTypes[0]
+	mi := &file_proto_client_msg_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -280,7 +279,7 @@ func (x *BaseMsg) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BaseMsg.ProtoReflect.Descriptor instead.
 func (*BaseMsg) Descriptor() ([]byte, []int) {
-	return file_proto_msg_proto_rawDescGZIP(), []int{0}
+	return file_proto_client_msg_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *BaseMsg) GetCmdOrder() int32 {
@@ -341,7 +340,7 @@ type ReqPing struct {
 
 func (x *ReqPing) Reset() {
 	*x = ReqPing{}
-	mi := &file_proto_msg_proto_msgTypes[1]
+	mi := &file_proto_client_msg_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -353,7 +352,7 @@ func (x *ReqPing) String() string {
 func (*ReqPing) ProtoMessage() {}
 
 func (x *ReqPing) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_msg_proto_msgTypes[1]
+	mi := &file_proto_client_msg_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -366,7 +365,7 @@ func (x *ReqPing) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReqPing.ProtoReflect.Descriptor instead.
 func (*ReqPing) Descriptor() ([]byte, []int) {
-	return file_proto_msg_proto_rawDescGZIP(), []int{1}
+	return file_proto_client_msg_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ReqPing) GetVersion() string {
@@ -386,7 +385,7 @@ type RespPing struct {
 
 func (x *RespPing) Reset() {
 	*x = RespPing{}
-	mi := &file_proto_msg_proto_msgTypes[2]
+	mi := &file_proto_client_msg_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -398,7 +397,7 @@ func (x *RespPing) String() string {
 func (*RespPing) ProtoMessage() {}
 
 func (x *RespPing) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_msg_proto_msgTypes[2]
+	mi := &file_proto_client_msg_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -411,7 +410,7 @@ func (x *RespPing) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RespPing.ProtoReflect.Descriptor instead.
 func (*RespPing) Descriptor() ([]byte, []int) {
-	return file_proto_msg_proto_rawDescGZIP(), []int{2}
+	return file_proto_client_msg_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *RespPing) GetT() int64 {
@@ -442,7 +441,7 @@ type ReqLogin struct {
 
 func (x *ReqLogin) Reset() {
 	*x = ReqLogin{}
-	mi := &file_proto_msg_proto_msgTypes[3]
+	mi := &file_proto_client_msg_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -454,7 +453,7 @@ func (x *ReqLogin) String() string {
 func (*ReqLogin) ProtoMessage() {}
 
 func (x *ReqLogin) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_msg_proto_msgTypes[3]
+	mi := &file_proto_client_msg_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -467,7 +466,7 @@ func (x *ReqLogin) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReqLogin.ProtoReflect.Descriptor instead.
 func (*ReqLogin) Descriptor() ([]byte, []int) {
-	return file_proto_msg_proto_rawDescGZIP(), []int{3}
+	return file_proto_client_msg_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ReqLogin) GetAccount() string {
@@ -514,7 +513,7 @@ type RespLogin struct {
 
 func (x *RespLogin) Reset() {
 	*x = RespLogin{}
-	mi := &file_proto_msg_proto_msgTypes[4]
+	mi := &file_proto_client_msg_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -526,7 +525,7 @@ func (x *RespLogin) String() string {
 func (*RespLogin) ProtoMessage() {}
 
 func (x *RespLogin) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_msg_proto_msgTypes[4]
+	mi := &file_proto_client_msg_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -539,7 +538,7 @@ func (x *RespLogin) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RespLogin.ProtoReflect.Descriptor instead.
 func (*RespLogin) Descriptor() ([]byte, []int) {
-	return file_proto_msg_proto_rawDescGZIP(), []int{4}
+	return file_proto_client_msg_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *RespLogin) GetUserInfo() *UserInfo {
@@ -567,7 +566,7 @@ type UserInfo struct {
 
 func (x *UserInfo) Reset() {
 	*x = UserInfo{}
-	mi := &file_proto_msg_proto_msgTypes[5]
+	mi := &file_proto_client_msg_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -579,7 +578,7 @@ func (x *UserInfo) String() string {
 func (*UserInfo) ProtoMessage() {}
 
 func (x *UserInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_msg_proto_msgTypes[5]
+	mi := &file_proto_client_msg_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -592,7 +591,7 @@ func (x *UserInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserInfo.ProtoReflect.Descriptor instead.
 func (*UserInfo) Descriptor() ([]byte, []int) {
-	return file_proto_msg_proto_rawDescGZIP(), []int{5}
+	return file_proto_client_msg_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *UserInfo) GetUserId() int64 {
@@ -644,11 +643,11 @@ func (x *UserInfo) GetRoomId() int32 {
 	return 0
 }
 
-var File_proto_msg_proto protoreflect.FileDescriptor
+var File_proto_client_msg_proto protoreflect.FileDescriptor
 
-const file_proto_msg_proto_rawDesc = "" +
+const file_proto_client_msg_proto_rawDesc = "" +
 	"\n" +
-	"\x0fproto/msg.proto\x12\tjhaoproto\"\xeb\x01\n" +
+	"\x16proto_client/msg.proto\x12\tjhaoproto\"\xeb\x01\n" +
 	"\aBaseMsg\x12\x1a\n" +
 	"\bcmdOrder\x18\x01 \x01(\x05R\bcmdOrder\x12\x1a\n" +
 	"\bcmdIndex\x18\x02 \x01(\x05R\bcmdIndex\x12\x1e\n" +
@@ -727,23 +726,23 @@ const file_proto_msg_proto_rawDesc = "" +
 	"\x1eserver_internal_is_user_online\x10Ǩ\xa5\x04\x120\n" +
 	")server_internal_club_create_room_template\x10Ȩ\xa5\x04\x120\n" +
 	")server_internal_club_delete_room_template\x10ɨ\xa5\x04\x12!\n" +
-	"\x1aserver_internal_createRoom\x10ʨ\xa5\x04B\x0eZ\fgo/jhaoprotob\x06proto3"
+	"\x1aserver_internal_createRoom\x10ʨ\xa5\x04B\x18Z\x16proto_client/jhaoprotob\x06proto3"
 
 var (
-	file_proto_msg_proto_rawDescOnce sync.Once
-	file_proto_msg_proto_rawDescData []byte
+	file_proto_client_msg_proto_rawDescOnce sync.Once
+	file_proto_client_msg_proto_rawDescData []byte
 )
 
-func file_proto_msg_proto_rawDescGZIP() []byte {
-	file_proto_msg_proto_rawDescOnce.Do(func() {
-		file_proto_msg_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_msg_proto_rawDesc), len(file_proto_msg_proto_rawDesc)))
+func file_proto_client_msg_proto_rawDescGZIP() []byte {
+	file_proto_client_msg_proto_rawDescOnce.Do(func() {
+		file_proto_client_msg_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_client_msg_proto_rawDesc), len(file_proto_client_msg_proto_rawDesc)))
 	})
-	return file_proto_msg_proto_rawDescData
+	return file_proto_client_msg_proto_rawDescData
 }
 
-var file_proto_msg_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_proto_msg_proto_goTypes = []any{
+var file_proto_client_msg_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_proto_client_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_proto_client_msg_proto_goTypes = []any{
 	(ErrorCodeWs)(0),  // 0: jhaoproto.ErrorCodeWs
 	(CmdIndex)(0),     // 1: jhaoproto.CmdIndex
 	(*BaseMsg)(nil),   // 2: jhaoproto.BaseMsg
@@ -753,7 +752,7 @@ var file_proto_msg_proto_goTypes = []any{
 	(*RespLogin)(nil), // 6: jhaoproto.RespLogin
 	(*UserInfo)(nil),  // 7: jhaoproto.UserInfo
 }
-var file_proto_msg_proto_depIdxs = []int32{
+var file_proto_client_msg_proto_depIdxs = []int32{
 	0, // 0: jhaoproto.BaseMsg.errorCode:type_name -> jhaoproto.ErrorCodeWs
 	7, // 1: jhaoproto.RespLogin.userInfo:type_name -> jhaoproto.UserInfo
 	2, // [2:2] is the sub-list for method output_type
@@ -763,27 +762,27 @@ var file_proto_msg_proto_depIdxs = []int32{
 	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_proto_msg_proto_init() }
-func file_proto_msg_proto_init() {
-	if File_proto_msg_proto != nil {
+func init() { file_proto_client_msg_proto_init() }
+func file_proto_client_msg_proto_init() {
+	if File_proto_client_msg_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_msg_proto_rawDesc), len(file_proto_msg_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_client_msg_proto_rawDesc), len(file_proto_client_msg_proto_rawDesc)),
 			NumEnums:      2,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_proto_msg_proto_goTypes,
-		DependencyIndexes: file_proto_msg_proto_depIdxs,
-		EnumInfos:         file_proto_msg_proto_enumTypes,
-		MessageInfos:      file_proto_msg_proto_msgTypes,
+		GoTypes:           file_proto_client_msg_proto_goTypes,
+		DependencyIndexes: file_proto_client_msg_proto_depIdxs,
+		EnumInfos:         file_proto_client_msg_proto_enumTypes,
+		MessageInfos:      file_proto_client_msg_proto_msgTypes,
 	}.Build()
-	File_proto_msg_proto = out.File
-	file_proto_msg_proto_goTypes = nil
-	file_proto_msg_proto_depIdxs = nil
+	File_proto_client_msg_proto = out.File
+	file_proto_client_msg_proto_goTypes = nil
+	file_proto_client_msg_proto_depIdxs = nil
 }

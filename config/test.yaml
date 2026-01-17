@@ -1,0 +1,51 @@
+
+db:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: "Mega@9527"
+
+web_server:
+  - id: 10000
+    ip: 127.0.0.1
+    internalIp: 127.0.0.1
+    http_port: 9600
+    grpc_port: 7000
+    socket_port: 0
+
+  - id: 10001
+    ip: 127.0.0.1
+    internalIp: 127.0.0.1
+    http_port: 9601
+    grpc_port: 7001
+    socket_port: 0
+
+account_server:
+  - id: 20000
+    ip: 127.0.0.1
+    internalIp: 127.0.0.1
+    http_port: 9700
+    grpc_port: 7100
+    socket_port: 0
+
+  - id: 20001
+    ip: 127.0.0.1
+    internalIp: 127.0.0.1
+    http_port: 9701
+    grpc_port: 7101
+    socket_port: 0
+
+hall_server:
+  - id: 30000
+    ip: 127.0.0.1
+    internalIp: 127.0.0.1
+    http_port: 9800
+    grpc_port: 7200
+    socket_port: 8000
+
+  - id: 30001
+    ip: 127.0.0.1
+    internalIp: 127.0.0.1
+    http_port: 9801
+    grpc_port: 7201
+    socket_port: 8001

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package jhao_grpc_proto;
+
+// 生成到 go 的包名
+option go_package = "grpc/jhao_grpc_proto";
+
+service HelloService {
+  rpc SayHello (HelloRequest) returns (HelloResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloResponse {
+  string message = 1;
+}
+
+message LoginRequest{
+    int32 cmdOrder = 1;
+    string account =2;
+
+}
+
+message LoginResponse{
+  int32 code = 1;
+  string msg = 2;
+}

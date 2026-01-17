@@ -3,7 +3,7 @@ syntax = "proto3";
 package jhaoproto;
 
 // 这一行是关键 ⭐⭐⭐
-option go_package = "go/jhaoproto";
+option go_package = "proto_client/jhaoproto";
 
 /**
 传输到服务器的公共数据

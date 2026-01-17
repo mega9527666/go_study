@@ -4,7 +4,7 @@ import (
 	"mega/engine/dateutil"
 	"mega/engine/logger"
 	"mega/engine/socket_connection"
-	"mega/proto/go/jhaoproto"
+	"mega/proto_client/jhaoproto"
 
 	"google.golang.org/protobuf/proto"
 )

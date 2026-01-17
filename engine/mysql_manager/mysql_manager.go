@@ -1,10 +1,9 @@
 package mysql_manager
 
 import (
-	"mega/common/db_config"
+	"mega/common/config"
 	"mega/engine/logger"
 	"mega/engine/mysql_client"
-	"strconv"
 	"sync"
 )
 
@@ -13,11 +12,6 @@ var (
 	dbMap     = make(map[string]*mysql_client.Db_client)
 	dbMapLock sync.RWMutex // // 如果读操作远多于写操作，使用 RWMutex 性能更好 // 如果读写比例差不多，使用 Mutex 更简单
 )
-
-func GetCodeDbName(dbName string, dbType int) string {
-	var realDbName string = dbName + "_db_" + strconv.Itoa(dbType)
-	return realDbName
-}
 
 // GetDbClient 根据 key 获取 Db_client 实例
 func getDbClient(key string) (*mysql_client.Db_client, bool) {
@@ -36,17 +30,15 @@ func setDbClient(key string, client *mysql_client.Db_client) {
 }
 
 // 获取 DB
-func GetDb(dbName string, dbType int) *mysql_client.Db_client {
-	if dbType == 0 {
-		dbType = db_config.NowDbType
-	}
+func GetDb(dbName string) *mysql_client.Db_client {
 
-	realDbName := GetCodeDbName(dbName, dbType)
+	// realDbName := GetCodeDbName(dbName, dbType)
+	realDbName := dbName
 	client, exists := getDbClient(realDbName)
 	if exists {
 		return client
 	} else {
-		dbConfig := db_config.GetDbConfig(dbType)
+		dbConfig := config.GetDB()
 		client, err := mysql_client.InitDB(dbName, dbConfig)
 		if err != nil {
 			logger.Warn("GetDb error", err)

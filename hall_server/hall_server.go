@@ -2,7 +2,6 @@ package main
 
 import (
 	"mega/common/config"
-	"mega/common/db_config"
 	"mega/engine/logger"
 	"mega/engine/socket_common"
 	"mega/engine/socket_connection"
@@ -13,7 +12,7 @@ import (
 )
 
 func main() {
-	port, err := strconv.Atoi(os.Args[1])
+	http_port, err := strconv.Atoi(os.Args[1])
 	if err != nil {
 		logger.Error("初始化端口失败:", os.Args, err)
 		return
@@ -24,10 +23,11 @@ func main() {
 		return
 	}
 
-	config.Environment = env
-	db_config.InitDb(config.Environment)
+	config.Env = env
 	config.ServerType = config.ServerType_List.Hall_server
-	logger.Info("Hall_server.main", os.Args, env, port)
+	//读取yaml配置文件
+	config.InitConfig(http_port)
+	logger.Info("Hall_server.main", os.Args, env, http_port)
 
 	// http.HandleFunc("/ws", wsHandler)
 	// http.HandleFunc("/ws", socket_common.WsHandler)
@@ -35,8 +35,8 @@ func main() {
 		socket_common.WsHandler(w, r, onMessageHandler)
 	})
 	// log.Println("WebSocket 服务启动: ws://localhost:8080/ws")
-	logger.Log("WebSocket 服务启动: ws://127.0.0.1:" + strconv.Itoa(port))
-	http.ListenAndServe(":"+strconv.Itoa(port), nil)
+	logger.Log("WebSocket 服务启动: ws://127.0.0.1:" + strconv.Itoa(http_port))
+	http.ListenAndServe(":"+strconv.Itoa(http_port), nil)
 
 }
 

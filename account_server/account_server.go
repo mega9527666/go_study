@@ -3,7 +3,6 @@ package main
 import (
 	"mega/account_server/account_reqhandler"
 	"mega/common/config"
-	"mega/common/db_config"
 	"mega/engine/logger"
 	"mega/engine/string_util"
 	"os"
@@ -12,7 +11,7 @@ import (
 )
 
 func main() {
-	port, err := strconv.Atoi(os.Args[1])
+	http_port, err := strconv.Atoi(os.Args[1])
 	if err != nil {
 		logger.Error("初始化端口失败:", os.Args, err)
 		return
@@ -23,10 +22,11 @@ func main() {
 		return
 	}
 
-	config.Environment = env
-	db_config.InitDb(config.Environment)
+	config.Env = env
 	config.ServerType = config.ServerType_List.Account_server
-	logger.Info("account_server.main", os.Args, env, port)
+	//读取yaml配置文件
+	config.InitConfig(http_port)
+	logger.Info("account_server.main", os.Args, env, http_port)
 
 	dataObj := map[string]interface{}{
 		"account": "abcd",
@@ -60,5 +60,5 @@ func main() {
 	// 	}
 	// }
 
-	account_reqhandler.ListenAndServe(port)
+	account_reqhandler.ListenAndServe(http_port)
 }

@@ -28,3 +28,17 @@ protoc \
   --go_out=./proto \
   ./proto/*.proto
 
+
+
+## YAML（更常见于服务器 / k8s）
+
+go get github.com/spf13/viper
+
+
+## grpc
+go get google.golang.org/grpc
+go get google.golang.org/protobuf
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+

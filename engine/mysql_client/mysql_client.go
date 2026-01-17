@@ -2,7 +2,7 @@ package mysql_client
 
 import (
 	"database/sql"
-	"mega/common/db_config"
+	"mega/common/config"
 	"mega/engine/logger"
 	"time"
 
@@ -12,12 +12,12 @@ import (
 
 type Db_client struct {
 	DbName   string
-	DbConfig *db_config.DbConfig
+	DbConfig config.DBConfig
 	Db       *sql.DB
 }
 
 // 构造函数
-func newDbClient(dbName string, config *db_config.DbConfig, db *sql.DB) *Db_client {
+func newDbClient(dbName string, config config.DBConfig, db *sql.DB) *Db_client {
 	return &Db_client{
 		DbName:   dbName,
 		DbConfig: config,
@@ -25,8 +25,8 @@ func newDbClient(dbName string, config *db_config.DbConfig, db *sql.DB) *Db_clie
 	}
 }
 
-func InitDB(dbName string, dbConfig *db_config.DbConfig) (*Db_client, error) {
-	dsn := db_config.GetDBDns(dbConfig, dbName)
+func InitDB(dbName string, dbConfig config.DBConfig) (*Db_client, error) {
+	dsn := config.GetDBDns(dbConfig, dbName)
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {

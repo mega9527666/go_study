@@ -3,7 +3,6 @@ package account_model
 import (
 	"database/sql"
 	"errors"
-	"mega/common/db_config"
 	"mega/engine/dateutil"
 	"mega/engine/logger"
 	"mega/engine/mysql_client"
@@ -33,37 +32,13 @@ type Account struct {
 	Headimgurl    string `db:"headimgurl" json:"headimgurl"`
 }
 
-//通道写法
-// func IsAccountExist(client mysql_client.Db_client, account string) <-chan struct {
-// 	bool
-// 	error
-// } {
-// 	// 创建结果通道
-// 	resultChan := make(chan struct {
-// 		bool
-// 		error
-// 	}, 1)
-
-// 	// 启动 goroutine 执行查询
-// 	go func() {
-// 		var count int
-// 		err := client.Db.QueryRow("SELECT COUNT(*) FROM t_accounts WHERE account = ?", account).Scan(&count)
-
-// 		// 发送结果到通道
-// 		resultChan <- struct {
-// 			bool
-// 			error
-// 		}{count > 0, err}
-
-// 		close(resultChan)
-// 	}()
-
-// 	// 立即返回通道，不阻塞
-// 	return resultChan
-// }
+func GetDbName() string {
+	return "db_account"
+}
 
 func IsAccountExist(account string) (bool, error) {
-	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
+
+	var client *mysql_client.Db_client = mysql_manager.GetDb(GetDbName())
 	var count int
 	err := client.Db.QueryRow("SELECT COUNT(*) FROM t_accounts WHERE account = ?", account).Scan(&count)
 	return count > 0, err
@@ -71,7 +46,7 @@ func IsAccountExist(account string) (bool, error) {
 
 // Insert 插入账户记录
 func InsertAccount(account *Account) (int64, error) {
-	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
+	var client *mysql_client.Db_client = mysql_manager.GetDb(GetDbName())
 	// 准备 SQL 语句
 	sqlStr := `
 	INSERT INTO t_accounts (
@@ -125,7 +100,7 @@ func InsertAccount(account *Account) (int64, error) {
 }
 
 func GetAccountByAccount(account string) (*Account, error) {
-	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
+	var client *mysql_client.Db_client = mysql_manager.GetDb(GetDbName())
 	query := `SELECT id, account, pass,token, account_type, status, ip,nick_name,channel,os,phone_type,bundle_name,system_version,create_time,last_login_time,phone,sex,headimgurl 
               FROM t_accounts WHERE account = ?`
 
@@ -165,7 +140,7 @@ func GetAccountByAccount(account string) (*Account, error) {
 
 // UpdateAccount 更新账户记录
 func UpdateAccount(account *Account) (int64, error) {
-	var client *mysql_client.Db_client = mysql_manager.GetDb(db_config.Db_account, db_config.NowDbType)
+	var client *mysql_client.Db_client = mysql_manager.GetDb(GetDbName())
 
 	// 准备 SQL 语句
 	sqlStr := `
