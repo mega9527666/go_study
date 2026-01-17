@@ -5,7 +5,7 @@ package jhao_grpc_proto;
 // 生成到 go 的包名
 option go_package = "grpc/jhao_grpc_proto";
 
-service HelloService {
+service GrpcService {
   rpc SayHello (HelloRequest) returns (HelloResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
 }

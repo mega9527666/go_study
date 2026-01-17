@@ -3,6 +3,7 @@ package main
 import (
 	"mega/common/config"
 	"mega/engine/logger"
+	"mega/grpc/grpc_server"
 	"mega/webserver/webreqhandler"
 	"os"
 	"strconv"
@@ -25,6 +26,16 @@ func main() {
 	config.ServerType = config.ServerType_List.Web_server
 	//读取yaml配置文件
 	config.InitConfig(http_port)
+
+	//启动grpc服务
+	go func() {
+		err := grpc_server.StartGrpcServer(
+			config.Now_ServerItem.GrpcPort,
+		)
+		if err != nil {
+			logger.Warn("grpc start error:", err)
+		}
+	}()
 
 	logger.Info("webserver.main", os.Args, env, http_port)
 	webreqhandler.ListenAndServe(http_port)

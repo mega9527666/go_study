@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.2
-// source: grpc/hello.proto
+// source: grpc/grpc.proto
 
 package jhao_grpc_proto
 
@@ -30,7 +30,7 @@ type HelloRequest struct {
 
 func (x *HelloRequest) Reset() {
 	*x = HelloRequest{}
-	mi := &file_grpc_hello_proto_msgTypes[0]
+	mi := &file_grpc_grpc_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -42,7 +42,7 @@ func (x *HelloRequest) String() string {
 func (*HelloRequest) ProtoMessage() {}
 
 func (x *HelloRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_hello_proto_msgTypes[0]
+	mi := &file_grpc_grpc_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -55,7 +55,7 @@ func (x *HelloRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HelloRequest.ProtoReflect.Descriptor instead.
 func (*HelloRequest) Descriptor() ([]byte, []int) {
-	return file_grpc_hello_proto_rawDescGZIP(), []int{0}
+	return file_grpc_grpc_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *HelloRequest) GetName() string {
@@ -74,7 +74,7 @@ type HelloResponse struct {
 
 func (x *HelloResponse) Reset() {
 	*x = HelloResponse{}
-	mi := &file_grpc_hello_proto_msgTypes[1]
+	mi := &file_grpc_grpc_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -86,7 +86,7 @@ func (x *HelloResponse) String() string {
 func (*HelloResponse) ProtoMessage() {}
 
 func (x *HelloResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_hello_proto_msgTypes[1]
+	mi := &file_grpc_grpc_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -99,7 +99,7 @@ func (x *HelloResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HelloResponse.ProtoReflect.Descriptor instead.
 func (*HelloResponse) Descriptor() ([]byte, []int) {
-	return file_grpc_hello_proto_rawDescGZIP(), []int{1}
+	return file_grpc_grpc_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *HelloResponse) GetMessage() string {
@@ -119,7 +119,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_grpc_hello_proto_msgTypes[2]
+	mi := &file_grpc_grpc_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -131,7 +131,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_hello_proto_msgTypes[2]
+	mi := &file_grpc_grpc_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -144,7 +144,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_grpc_hello_proto_rawDescGZIP(), []int{2}
+	return file_grpc_grpc_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *LoginRequest) GetCmdOrder() int32 {
@@ -171,7 +171,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_grpc_hello_proto_msgTypes[3]
+	mi := &file_grpc_grpc_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -183,7 +183,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_hello_proto_msgTypes[3]
+	mi := &file_grpc_grpc_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -196,7 +196,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_grpc_hello_proto_rawDescGZIP(), []int{3}
+	return file_grpc_grpc_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *LoginResponse) GetCode() int32 {
@@ -213,11 +213,11 @@ func (x *LoginResponse) GetMsg() string {
 	return ""
 }
 
-var File_grpc_hello_proto protoreflect.FileDescriptor
+var File_grpc_grpc_proto protoreflect.FileDescriptor
 
-const file_grpc_hello_proto_rawDesc = "" +
+const file_grpc_grpc_proto_rawDesc = "" +
 	"\n" +
-	"\x10grpc/hello.proto\x12\x0fjhao_grpc_proto\"\"\n" +
+	"\x0fgrpc/grpc.proto\x12\x0fjhao_grpc_proto\"\"\n" +
 	"\fHelloRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\")\n" +
 	"\rHelloResponse\x12\x18\n" +
@@ -227,35 +227,35 @@ const file_grpc_hello_proto_rawDesc = "" +
 	"\aaccount\x18\x02 \x01(\tR\aaccount\"5\n" +
 	"\rLoginResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x10\n" +
-	"\x03msg\x18\x02 \x01(\tR\x03msg2\xa1\x01\n" +
-	"\fHelloService\x12I\n" +
+	"\x03msg\x18\x02 \x01(\tR\x03msg2\xa0\x01\n" +
+	"\vGrpcService\x12I\n" +
 	"\bSayHello\x12\x1d.jhao_grpc_proto.HelloRequest\x1a\x1e.jhao_grpc_proto.HelloResponse\x12F\n" +
 	"\x05Login\x12\x1d.jhao_grpc_proto.LoginRequest\x1a\x1e.jhao_grpc_proto.LoginResponseB\x16Z\x14grpc/jhao_grpc_protob\x06proto3"
 
 var (
-	file_grpc_hello_proto_rawDescOnce sync.Once
-	file_grpc_hello_proto_rawDescData []byte
+	file_grpc_grpc_proto_rawDescOnce sync.Once
+	file_grpc_grpc_proto_rawDescData []byte
 )
 
-func file_grpc_hello_proto_rawDescGZIP() []byte {
-	file_grpc_hello_proto_rawDescOnce.Do(func() {
-		file_grpc_hello_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_grpc_hello_proto_rawDesc), len(file_grpc_hello_proto_rawDesc)))
+func file_grpc_grpc_proto_rawDescGZIP() []byte {
+	file_grpc_grpc_proto_rawDescOnce.Do(func() {
+		file_grpc_grpc_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_grpc_grpc_proto_rawDesc), len(file_grpc_grpc_proto_rawDesc)))
 	})
-	return file_grpc_hello_proto_rawDescData
+	return file_grpc_grpc_proto_rawDescData
 }
 
-var file_grpc_hello_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_grpc_hello_proto_goTypes = []any{
+var file_grpc_grpc_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_grpc_grpc_proto_goTypes = []any{
 	(*HelloRequest)(nil),  // 0: jhao_grpc_proto.HelloRequest
 	(*HelloResponse)(nil), // 1: jhao_grpc_proto.HelloResponse
 	(*LoginRequest)(nil),  // 2: jhao_grpc_proto.LoginRequest
 	(*LoginResponse)(nil), // 3: jhao_grpc_proto.LoginResponse
 }
-var file_grpc_hello_proto_depIdxs = []int32{
-	0, // 0: jhao_grpc_proto.HelloService.SayHello:input_type -> jhao_grpc_proto.HelloRequest
-	2, // 1: jhao_grpc_proto.HelloService.Login:input_type -> jhao_grpc_proto.LoginRequest
-	1, // 2: jhao_grpc_proto.HelloService.SayHello:output_type -> jhao_grpc_proto.HelloResponse
-	3, // 3: jhao_grpc_proto.HelloService.Login:output_type -> jhao_grpc_proto.LoginResponse
+var file_grpc_grpc_proto_depIdxs = []int32{
+	0, // 0: jhao_grpc_proto.GrpcService.SayHello:input_type -> jhao_grpc_proto.HelloRequest
+	2, // 1: jhao_grpc_proto.GrpcService.Login:input_type -> jhao_grpc_proto.LoginRequest
+	1, // 2: jhao_grpc_proto.GrpcService.SayHello:output_type -> jhao_grpc_proto.HelloResponse
+	3, // 3: jhao_grpc_proto.GrpcService.Login:output_type -> jhao_grpc_proto.LoginResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -263,26 +263,26 @@ var file_grpc_hello_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_grpc_hello_proto_init() }
-func file_grpc_hello_proto_init() {
-	if File_grpc_hello_proto != nil {
+func init() { file_grpc_grpc_proto_init() }
+func file_grpc_grpc_proto_init() {
+	if File_grpc_grpc_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_hello_proto_rawDesc), len(file_grpc_hello_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_grpc_proto_rawDesc), len(file_grpc_grpc_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_grpc_hello_proto_goTypes,
-		DependencyIndexes: file_grpc_hello_proto_depIdxs,
-		MessageInfos:      file_grpc_hello_proto_msgTypes,
+		GoTypes:           file_grpc_grpc_proto_goTypes,
+		DependencyIndexes: file_grpc_grpc_proto_depIdxs,
+		MessageInfos:      file_grpc_grpc_proto_msgTypes,
 	}.Build()
-	File_grpc_hello_proto = out.File
-	file_grpc_hello_proto_goTypes = nil
-	file_grpc_hello_proto_depIdxs = nil
+	File_grpc_grpc_proto = out.File
+	file_grpc_grpc_proto_goTypes = nil
+	file_grpc_grpc_proto_depIdxs = nil
 }

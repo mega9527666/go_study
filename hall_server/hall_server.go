@@ -5,6 +5,7 @@ import (
 	"mega/engine/logger"
 	"mega/engine/socket_common"
 	"mega/engine/socket_connection"
+	"mega/grpc/grpc_server"
 	"mega/hall_server/hall_socket_msg_mgr"
 	"net/http"
 	"os"
@@ -34,8 +35,16 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		socket_common.WsHandler(w, r, onMessageHandler)
 	})
-	// log.Println("WebSocket 服务启动: ws://localhost:8080/ws")
-	logger.Log("WebSocket 服务启动: ws://127.0.0.1:" + strconv.Itoa(http_port))
+	//启动grpc服务
+	go func() {
+		err := grpc_server.StartGrpcServer(
+			config.Now_ServerItem.GrpcPort,
+		)
+		if err != nil {
+			logger.Warn("grpc start error:", err)
+		}
+	}()
+
 	http.ListenAndServe(":"+strconv.Itoa(http_port), nil)
 
 }

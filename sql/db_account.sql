@@ -30,3 +30,4 @@ CREATE TABLE `t_accounts` (
   KEY `idx_last_login_time` (`last_login_time`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
+
