@@ -3,15 +3,14 @@ package main
 import (
 	"mega/common/config"
 	"mega/engine/logger"
-	"mega/grpc/grpc_client_manager"
-	"time"
+	"runtime"
 )
 
 // "github.com/gorilla/websocket"
 
 func main() {
 
-	var http_port int = 9800
+	// var http_port int = 9800
 	config.Env = config.EnvDev
 	config.ServerType = config.ServerType_List.Hall_server
 
@@ -49,16 +48,17 @@ func main() {
 	// 	}
 	// }
 
-	//读取yaml配置文件
-	config.InitConfig(http_port)
+	// //读取yaml配置文件
+	// config.InitConfig(http_port)
 
-	grpc_client_manager.InitGrpcClient()
-	time.AfterFunc(3*time.Second, func() {
-		logger.Log("延迟执行:")
-		grpc_client_manager.Login()
-	})
+	// grpc_client_manager.InitGrpcClient()
+	// time.AfterFunc(3*time.Second, func() {
+	// 	logger.Log("延迟执行:")
+	// 	grpc_client_manager.Login()
+	// })
 
-	// 关键：等待足够时间让定时器执行
-	time.Sleep(5 * time.Second) // 等待 4 秒，确保 3 秒的定时器能执行
+	// // 关键：等待足够时间让定时器执行
+	// time.Sleep(5 * time.Second) // 等待 4 秒，确保 3 秒的定时器能执行
 
+	logger.Log("NumCPU==", runtime.NumCPU())
 }

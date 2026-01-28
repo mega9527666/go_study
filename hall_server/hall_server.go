@@ -5,10 +5,12 @@ import (
 	"mega/engine/logger"
 	"mega/engine/socket_common"
 	"mega/engine/socket_connection"
+	"mega/engine/socket_worker"
 	"mega/grpc/grpc_server"
 	"mega/hall_server/hall_socket_msg_mgr"
 	"net/http"
 	"os"
+	"runtime"
 	"strconv"
 )
 
@@ -32,6 +34,8 @@ func main() {
 
 	// http.HandleFunc("/ws", wsHandler)
 	// http.HandleFunc("/ws", socket_common.WsHandler)
+	socket_worker.InitWorkerPool(runtime.NumCPU() * 4) //创建	并发度 ≈ CPU × (1 + 等待时间 / 计算时间)
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		socket_common.WsHandler(w, r, onMessageHandler)
 	})

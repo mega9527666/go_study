@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"mega/engine/logger"
+	"mega/engine/random_util"
 	"strconv"
 
 	"github.com/spf13/viper"
@@ -161,4 +162,28 @@ func GetDBDns(dbConfig DBConfig, dbName string) string {
 	// dsn := "user:password@tcp(" + dbConfig.Host + ":" + strconv.Itoa(dbConfig.Port) + ")/" + dbName + "?charset=utf8mb4&parseTime=true&loc=Local"
 	dsn := dbConfig.User + ":" + dbConfig.Password + "@tcp(" + dbConfig.Host + ":" + strconv.Itoa(dbConfig.Port) + ")/" + dbName + "?charset=utf8mb4&parseTime=true&loc=Local"
 	return dsn
+}
+
+func RandomServerItem(serverType string) ServerItem {
+	var list []ServerItem
+	switch serverType {
+	case ServerType_List.Account_server:
+		list = Global_Config.AccountServer
+	case ServerType_List.Hall_server:
+		list = Global_Config.HallServer
+	}
+	if len(list) == 0 {
+		logger.Warn("RandomServerItem list is empty", serverType)
+		return ServerItem{}
+	}
+	return randomServerItemByList(list)
+}
+
+func randomServerItemByList(list []ServerItem) ServerItem {
+	if len(list) == 0 {
+		logger.Warn("randomServerItemByList list is empty")
+		return ServerItem{}
+	}
+	ru := random_util.NewRandomUtilAuto()
+	return random_util.RandomItem(ru, list)
 }

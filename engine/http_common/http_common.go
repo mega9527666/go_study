@@ -181,6 +181,7 @@ func commonHandler(w http.ResponseWriter, r *http.Request, next HttpCustomHandle
 }
 
 func SendHttpResponseModel(w http.ResponseWriter, responseModel HttpResponseModel) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	// 向客户端写入响应内容
 	w.WriteHeader(http.StatusOK)
 	// 将结构体编码为 JSON 并写入响应体

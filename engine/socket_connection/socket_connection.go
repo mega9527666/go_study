@@ -3,6 +3,7 @@ package socket_connection
 import (
 	"errors"
 	"mega/engine/logger"
+	"mega/engine/socket_worker"
 	"sync/atomic"
 	"time"
 
@@ -79,13 +80,27 @@ func (s *Socket_Connection) ReadMsg() {
 			_ = s.conn.SetReadDeadline(time.Now().Add(readWait))
 			str := string(msg)
 			logger.Log("收到消息 string: ", s.Id, s.Ip, msgType, str)
-			// b := []byte(str)
-			// s.Send(b)
-			s.onMessageHandler(s, msgType, msg)
+			// s.onMessageHandler(s, msgType, msg)
+
+			socket_worker.GlobalWorkerPool.Dispatch(
+				socket_worker.MsgTask{
+					Conn:    s,
+					MsgType: msgType,
+					Data:    msg,
+				},
+			)
 
 		case websocket.BinaryMessage:
 			_ = s.conn.SetReadDeadline(time.Now().Add(readWait))
 			logger.Log("收到消息 BinaryMessage: ", s.Id, s.Ip, msgType, msg)
+			// s.onMessageHandler(s, msgType, msg)
+			socket_worker.GlobalWorkerPool.Dispatch(
+				socket_worker.MsgTask{
+					Conn:    s,
+					MsgType: msgType,
+					Data:    msg,
+				},
+			)
 		case websocket.CloseMessage: //websocket.CloseMessage 基本收不到（重要⚠️）大多数情况下： [warn] 读取消息失败: 127.0.0.1 websocket: close 1001 (going away)
 			logger.Log("收到消息 CloseMessage: ", s.Id, s.Ip, msgType)
 			return
@@ -138,6 +153,13 @@ func (s *Socket_Connection) Send(msg []byte) (err error) {
 		return errors.New("connection closed")
 	}
 
+}
+
+func (s *Socket_Connection) OnMessage(msgType int, data []byte) {
+	if !s.IsOpen() {
+		return
+	}
+	s.onMessageHandler(s, msgType, data)
 }
 
 // 获取状态
