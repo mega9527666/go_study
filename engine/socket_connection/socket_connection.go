@@ -83,10 +83,10 @@ func (s *Socket_Connection) ReadMsg() {
 			// s.onMessageHandler(s, msgType, msg)
 
 			socket_worker.GlobalWorkerPool.Dispatch(
-				socket_worker.MsgTask{
-					Conn:    s,
-					MsgType: msgType,
-					Data:    msg,
+				// key：保证同一个连接落同一个 worker
+				string(rune(s.Id)),
+				func() {
+					s.OnMessage(msgType, msg)
 				},
 			)
 
@@ -95,10 +95,10 @@ func (s *Socket_Connection) ReadMsg() {
 			logger.Log("收到消息 BinaryMessage: ", s.Id, s.Ip, msgType, msg)
 			// s.onMessageHandler(s, msgType, msg)
 			socket_worker.GlobalWorkerPool.Dispatch(
-				socket_worker.MsgTask{
-					Conn:    s,
-					MsgType: msgType,
-					Data:    msg,
+				// key：保证同一个连接落同一个 worker
+				string(rune(s.Id)),
+				func() {
+					s.OnMessage(msgType, msg)
 				},
 			)
 		case websocket.CloseMessage: //websocket.CloseMessage 基本收不到（重要⚠️）大多数情况下： [warn] 读取消息失败: 127.0.0.1 websocket: close 1001 (going away)
