@@ -4,7 +4,6 @@ import (
 	"errors"
 	"mega/engine/logger"
 	"mega/engine/socket_worker"
-	"strconv"
 	"sync/atomic"
 	"time"
 
@@ -85,7 +84,7 @@ func (s *Socket_Connection) ReadMsg() {
 
 			socket_worker.GlobalWorkerPool.Dispatch(
 				// key：保证同一个连接落同一个 worker
-				strconv.FormatInt(s.Id, 10),
+				s.Id,
 				func() {
 					s.OnMessage(msgType, msg)
 				},
@@ -97,7 +96,7 @@ func (s *Socket_Connection) ReadMsg() {
 			// s.onMessageHandler(s, msgType, msg)
 			socket_worker.GlobalWorkerPool.Dispatch(
 				// key：保证同一个连接落同一个 worker
-				strconv.FormatInt(s.Id, 10),
+				s.Id,
 				func() {
 					s.OnMessage(msgType, msg)
 				},

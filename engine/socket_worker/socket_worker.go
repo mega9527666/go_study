@@ -1,7 +1,6 @@
 package socket_worker
 
 import (
-	"hash/crc32"
 	"mega/engine/logger"
 )
 
@@ -37,12 +36,12 @@ func NewWorkerPool(workerNum int) *WorkerPool {
 }
 
 // ⭐ key 用来保证同一连接固定落到同一个 worker
-func (wp *WorkerPool) Dispatch(key string, task Task) {
-	idx := int(crc32.ChecksumIEEE([]byte(key))) % len(wp.workers)
+func (wp *WorkerPool) Dispatch(id int64, task Task) {
+	idx := int(id % int64(len(wp.workers)))
 
 	select {
 	case wp.workers[idx] <- task:
 	default:
-		logger.Warn("worker 队列满，丢弃任务:", key)
+		logger.Warn("worker 队列满，丢弃任务:", id)
 	}
 }
